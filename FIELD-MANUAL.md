@@ -820,7 +820,7 @@ The document also named the decline signals: skipping a reviewer because "it is 
 - Write the quality bar as a document the orchestrator pastes, not a habit it remembers.
 - Keep an append-only build log, dated, that records what became true and what is still not built. Do not rewrite it to look smoother than it was.
 
-Sources for this section: the usabl build logs, quality bars, and role definitions for both releases are public at [usabl-dev/usabl-plans](https://github.com/usabl-dev/usabl-plans) (`how-we-built-this.md`, `quality-bar.md`, `roles.md`, and the `v0.2.0/` versions of each). The product is at [usabl-dev/usabl](https://github.com/usabl-dev/usabl).
+Sources for this section: the usabl build logs, quality bars, and role definitions for both releases (`how-we-built-this.md`, `quality-bar.md`, `roles.md`, and the `v0.2.0/` versions of each). They are kept in the project's planning repository, which is private. The product is at [usabl-dev/usabl](https://github.com/usabl-dev/usabl).
 
 ---
 

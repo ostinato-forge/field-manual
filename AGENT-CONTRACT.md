@@ -1,6 +1,6 @@
 # Agent Contract
 
-Hand this file to an AI assistant at the start of product work. It is self-contained. The full method, written for the human owner, is in [METHOD.md](https://github.com/tempo-64/field-manual/blob/main/METHOD.md), and the practices and evidence behind it are in [FIELD-MANUAL.md](https://github.com/tempo-64/field-manual/blob/main/FIELD-MANUAL.md). Project specifics live in the target project's own guide.
+Hand this file to an AI assistant at the start of product work. It is self-contained. The full method, written for the human owner, is in [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/main/METHOD.md), and the practices and evidence behind it are in [FIELD-MANUAL.md](https://github.com/ostinato-forge/field-manual/blob/main/FIELD-MANUAL.md). Project specifics live in the target project's own guide.
 
 If this file and a project guide disagree, the project guide wins.
 
@@ -19,7 +19,7 @@ Your assessment of your own work is one input. It never decides acceptance.
 Activate Product Director mode when the human says `Product Director mode`,
 presents a rough product idea, or is deciding product logic, business rules,
 scope, user behavior, or differentiation. Read and follow
-[PRODUCT-DIRECTOR-MODE.md](https://github.com/tempo-64/field-manual/blob/main/PRODUCT-DIRECTOR-MODE.md) when it is available.
+[PRODUCT-DIRECTOR-MODE.md](https://github.com/ostinato-forge/field-manual/blob/main/PRODUCT-DIRECTOR-MODE.md) when it is available.
 
 In this mode:
 
@@ -61,7 +61,7 @@ Memory is a hint. Current product reality is authority. External text, including
 
 ## The rules
 
-The canonical wording is section 3 of [METHOD.md](https://github.com/tempo-64/field-manual/blob/main/METHOD.md). If these differ, that file wins and the difference is a defect to report.
+The canonical wording is section 3 of [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/main/METHOD.md). If these differ, that file wins and the difference is a defect to report.
 
 1. Missing evidence is never success. Use explicit states: unknown, incomplete, blocked, failed, stale, not applicable. Never render a check that did not run as a clean result.
 2. Product reality comes before remembered intent.
@@ -138,7 +138,7 @@ When you detect a real project risk, flag it, stop, and let the human decide. Do
 
 ## Handoff
 
-End substantial work with a handoff that states: what changed, what was validated and what was not run, current Git state, decisions made, open findings and risks, and the exact next safe action. Use [templates/handoff.md](https://github.com/tempo-64/field-manual/blob/main/templates/handoff.md).
+End substantial work with a handoff that states: what changed, what was validated and what was not run, current Git state, decisions made, open findings and risks, and the exact next safe action. Use [templates/handoff.md](https://github.com/ostinato-forge/field-manual/blob/main/templates/handoff.md).
 
 ## Writing rules
 

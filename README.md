@@ -46,7 +46,7 @@ A software engineer or product builder, at any level, working with AI coding age
 
 ## Evidence base
 
-Every practice meets at least one bar: independently converged by multiple practitioners, empirically researched with data, repeatedly observed across real projects, or recorded as a dated incident with the rule it produced. Opinions are labeled. Preferences are left out. Sources are cited in the manual. Key sources include Anthropic's engineering research (~400K sessions), CodeScene's peer-reviewed code health studies, Simon Willison's Agentic Engineering Patterns, Addy Osmani's practitioner workflow documentation, and the public build record of usabl (usabl-dev/usabl-plans).
+Every practice meets at least one bar: independently converged by multiple practitioners, empirically researched with data, repeatedly observed across real projects, or recorded as a dated incident with the rule it produced. Opinions are labeled. Preferences are left out. Sources are cited in the manual. Key sources include Anthropic's engineering research (~400K sessions), CodeScene's peer-reviewed code health studies, Simon Willison's Agentic Engineering Patterns, Addy Osmani's practitioner workflow documentation, and the build record of usabl.
 
 ## License
 
