@@ -111,7 +111,7 @@ Before the specification:
 - [ ] Migration, backup, recovery, and rollback.
 - [ ] Claims matrix current.
 - [ ] Known limits recorded.
-- [ ] Planning and internal artifacts excluded from what ships.
+- [ ] Planning and internal artifacts are where the project guide says they live.
 - [ ] Human release decision.
 - [ ] Restart-ready handoff.
 

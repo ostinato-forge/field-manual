@@ -4,9 +4,9 @@ Practical engineering with AI coding agents, grounded in evidence.
 
 ## What This Is
 
-*Last updated 2026-10-12.*
+*Last updated 2026-11-12.*
 
-This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
+This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and the author's own projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
 
 These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
 
@@ -27,7 +27,7 @@ Every practice in this guide meets at least one of these bars:
 
 Opinions are labeled as opinions. Preferences are left out. When evidence is thin, that's noted.
 
-Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and the author's own production projects, including one whose full build record is public and summarized in the case study near the end. Full references at the end.
+Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and the author's own production projects, including one whose build record is summarized in the case study near the end. Full references at the end.
 
 ---
 
@@ -35,9 +35,9 @@ Key sources: Anthropic's engineering research and agentic coding studies (~400K 
 
 ### You're the architect. The agent is the builder.
 
-Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it). This split is the model that works. On larger work the human may delegate the architect role to a strong assistant and keep the owner role: intent, quality bar, acceptance, and release.
+Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it) (S1). This split is the model that works. On larger work the human may delegate the architect role to a strong assistant and keep the owner role: intent, quality bar, acceptance, and release.
 
-The same study found that **domain expertise, not coding background**, is the primary predictor of session success. Every major occupation succeeds at nearly the same rate as software engineers. The more domain expertise you bring, the more work the agent does per instruction, and the more likely the session succeeds.
+The same study found that **domain expertise, and not coding proficiency**, amplifies effective use of the tool. On coding tasks, every major occupation succeeds at nearly the same rate as software engineers. The more domain expertise you bring, the more work the agent does per instruction and the more often the session succeeds, though the study found the gap between intermediate and expert users modest.
 
 What this means in practice:
 
@@ -57,7 +57,7 @@ Anti-pattern to watch for: **performative agreement**. When you give feedback, s
 
 ### The project operating manual
 
-Every project needs a file that tells the agent how to work in this specific codebase. Most tools call this `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or similar. The name varies, but the purpose is universal. By early 2026, this format is read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q.
+Every project needs a file that tells the agent how to work in this specific codebase. Most tools call this `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or similar. The name varies, but the purpose is universal. One guide reports that by early 2026 `AGENTS.md` was read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q (S11).
 
 **What makes a good operating manual:**
 
@@ -84,11 +84,11 @@ Leave out:
 
 ### Security defaults from the start
 
-Multiple sources converge on this: security cannot be bolted on later when working with agents.
+Security cannot be bolted on later when working with agents.
 
-Willison describes the **"Lethal Trifecta"**: agent access to private data + processing untrusted external content + ability to communicate externally = zero-click attack surface. Any single component is manageable, but all three together create real risk.
+Willison describes the **"lethal trifecta"**: access to your private data, exposure to untrusted content, and the ability to communicate externally (S8). An agent that combines all three can be tricked into sending your data to an attacker. Any single component is manageable.
 
-Anthropic's 2026 Agentic Coding Report makes it concrete: an agent writing 1,000 PRs/week with a 1% vulnerability rate creates 10 new vulnerabilities weekly.
+The arithmetic makes the scale concrete: an agent that writes 1,000 pull requests a week with a 1% vulnerability rate creates 10 new vulnerabilities a week.
 
 For your operating manual, this means encoding security as **specific constraints**, not principles:
 
@@ -180,9 +180,9 @@ The sharpest friction is usually an unspoken mismatch about *how you build*: wha
 
 ### Specs before code
 
-This is the single most universally agreed-upon practice across every source. Osmani, Willison, Anthropic, CodeScene, Donner: everyone who builds seriously with agents converges here.
+Independent sources converge here. Osmani's first lesson is "Start with a clear plan (specs before code)" (S9), and Anthropic's harness research reached the same point from the failure side.
 
-The reasoning is empirical: NxCode found that **10 minutes spent writing a clear spec saves hours of rework.** Anthropic's harness research found that agents given only high-level prompts try to "one-shot" complex projects and fail. Agents given structured specs build incrementally and succeed.
+That research found that an agent given only a high-level prompt tends to attempt to "one-shot" the whole application and falls short. Given a feature list to work through, it makes incremental progress (S2).
 
 A spec doesn't need to be long. It needs to answer:
 
@@ -199,7 +199,7 @@ The stop point matters. It tells the agent where to hand control back instead of
 
 ### First slice before breadth
 
-Prove the architecture works with one vertical slice before expanding features. One scenario, one user journey, end to end. This practice appears independently in proof-driven development, lean product thinking, and Anthropic's harness architecture (which implements one feature per session, verifying before moving on).
+Prove the architecture works with one vertical slice before expanding features. One scenario, one user journey, end to end. This practice appears independently in proof-driven development, lean product thinking, and Anthropic's harness architecture, which works feature by feature and verifies before moving on (S2).
 
 The instinct to build broadly first is strong: "let me set up the whole project structure, all the models, all the routes." Resist it. Breadth before proof is noise. An agent will happily scaffold an impressive-looking shell that avoids the hardest product question.
 
@@ -215,7 +215,7 @@ This front-loads the thinking about edge cases, failure modes, and acceptance cr
 
 ### Small, verifiable steps
 
-Every source converges here. Osmani: "LLMs do best when given focused prompts: implement one function, fix one bug, add one feature at a time." Anthropic's harness research: agents that try to do too much at once fail. CodeScene: smaller changes in healthy code produce fewer defects.
+Sources converge here. Osmani: "LLMs do best when given focused prompts: implement one function, fix one bug, add one feature at a time" (S9). Anthropic's harness research: agents that try to do too much at once fail (S2).
 
 The practical heuristic: **if you can't verify a change in under two minutes, break it smaller.**
 
@@ -227,18 +227,18 @@ Most builders either never use plan mode (and waste time on wrong approaches) or
 
 The heuristic: **use plan mode when there are multiple reasonable approaches and the wrong choice would be expensive to reverse.** "Fix the typo on line 42" doesn't need a plan. "Add authentication" needs alignment on the approach before code starts.
 
-Osmani's workflow makes this explicit: Explore → Plan → Code → Commit. But the Explore and Plan steps scale with the ambiguity of the task. A clear, scoped task can skip straight to Code.
+Anthropic's Claude Code guidance names the sequence: explore, plan, code, commit (S10). The Explore and Plan steps scale with the ambiguity of the task. A clear, scoped task can skip straight to Code.
 
 ### TDD works better with agents, not worse
 
-Willison advocates TDD specifically adapted for agent workflows. The pattern:
+Willison advocates TDD specifically adapted for agent workflows (S7). The pattern:
 
 1. Write the test (or have the agent write it from your spec)
 2. Verify the test fails, and fails for the intended reason, and that it captures the behavior you actually want
 3. Let the agent implement until the test passes
 4. Review the implementation
 
-This works better with agents for a specific reason: **the test is an unambiguous, machine-checkable definition of "done."** Without a test, "done" is the agent's judgment, and Anthropic's research shows agents reliably skew positive when evaluating their own work. With a test, "done" is a pass/fail that neither side can talk their way around.
+This works better with agents for a specific reason: **the test is an unambiguous, machine-checkable definition of "done."** Without a test, "done" is the agent's judgment, and Anthropic's research shows agents reliably skew positive when evaluating their own work (S3). With a test, "done" is a pass/fail that neither side can talk their way around.
 
 Write tests that verify **behavior**, not implementation details. Tests written to hit a coverage number are paperwork. Tests that describe what the system should do from the outside are specifications.
 
@@ -265,9 +265,9 @@ Commits are save points.
 
 ### Give full errors, not summaries
 
-When something fails, paste the full error message and stack trace. Don't say "it didn't work" or "there's an error." The single biggest time-waster in agent sessions is vague error descriptions that force the agent to guess at what went wrong.
+When something fails, paste the full error message and stack trace. Don't say "it didn't work" or "there's an error." A vague error description forces the agent to guess at what went wrong.
 
-The agent can process a 50-line stack trace in milliseconds. You summarizing it to one sentence loses the diagnostic signal.
+The agent reads a 50-line stack trace at almost no cost. Your one-sentence summary of it loses the diagnostic signal.
 
 ### Feedback shapes future behavior
 
@@ -293,7 +293,7 @@ The one constant: **always review the diff, never just the agent's summary.** Th
 
 ### Show, don't tell
 
-When you want the agent to follow a pattern, pointing at an existing example in the codebase is 10x more effective than describing the pattern in prose.
+When you want the agent to follow a pattern, pointing at an existing example in the codebase works better than describing the pattern in prose.
 
 "Follow the pattern in `src/api/users.ts`" beats a paragraph explaining the API pattern. The agent will read the file, internalize the structure, and replicate it. This works because agents are excellent pattern matchers; showing them a concrete example is playing to their strength.
 
@@ -335,15 +335,15 @@ This applies to your own tooling too. One builder's efficiency monitor reported 
 
 ### Automated gates are force multipliers
 
-CodeScene's peer-reviewed research (39 production codebases) found that **healthy code enables 124% faster development and contains 15x fewer defects.** When AI agents operate on unhealthy code, defect risk increases by at least 60%. Agents need code health above 9.4/10 to keep bug rates in check; the industry average is 5.15.
+A 2022 study of 39 production codebases found that **low-quality code contains 15 times more defects** than high-quality code, and that resolving an issue in it takes on average 124% more development time (S4). That study predates coding agents. A 2026 study by two of the same authors tested models directly: models asked to refactor code broke it significantly less often when the code was healthy, a risk reduction of 15 to 30% (S5). CodeScene's own guidance is to aim for a Code Health of at least 9.5 out of 10 (S6).
 
 What this means in practice: **invest in your automated quality pipeline before investing in agent sophistication.** Tests, linters, type checkers, and formatters provide backpressure that catches agent mistakes automatically. The loop becomes: agent writes code → automated tools catch issues → agent fixes them → you oversee the direction.
 
-Osmani describes this as "having an extremely fast junior dev whose work is instantly checked by a tireless QA engineer."
+Osmani describes this as "having an extremely fast junior dev whose work is instantly checked by a tireless QA engineer" (S9).
 
 ### Separate who builds from who evaluates
 
-Anthropic's harness research found a critical pattern: **agents reliably praise their own work**, even when quality is mediocre. Without a separate evaluation signal, you get agents that ship at 30% complete with full confidence.
+Anthropic's harness research found a critical pattern: **agents reliably praise their own work**. Asked to evaluate what they have produced, they "tend to respond by confidently praising the work", even when the quality is plainly mediocre to a human observer (S3). Without a separate evaluation signal, the agent's own verdict tells you little.
 
 Practical applications:
 
@@ -355,7 +355,7 @@ Practical applications:
 
 Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work: in a browser, in a terminal, against real data.
 
-This is the gap where the most bugs hide: code that passes all tests but doesn't actually do what the user needs. The agent can't close this gap for you. You have to use the thing.
+This is the gap where bugs hide: code that passes all tests but doesn't actually do what the user needs. The builder cannot close this gap by reporting on its own work. Someone other than the builder has to use the thing, and the record says who ran it: you, or an agent whose run is labeled as agent-run.
 
 ### Mutation-test the tests
 
@@ -416,13 +416,13 @@ The rule: when a change is applied by a codemod, formatter, bulk rename, migrati
 
 ### The session continuity problem
 
-Anthropic's harness research names this directly: "The core challenge of long-running agents is that they must work in discrete sessions, and each new session begins with no memory of what came before."
+Anthropic's harness research names this directly: "The core challenge of long-running agents is that they must work in discrete sessions, and each new session begins with no memory of what came before" (S2).
 
-Every session start is a cold start. The agent doesn't remember what you discussed yesterday, what approach you agreed on, or what's half-finished. Without a bridging mechanism, you waste the first 10 minutes of every session re-establishing context. Worse, the agent proceeds from stale assumptions.
+Every session start is a cold start. The agent doesn't remember what you discussed yesterday, what approach you agreed on, or what's half-finished. Without a bridging mechanism, you spend the start of every session re-establishing context. Worse, the agent proceeds from stale assumptions.
 
 ### Structured artifacts bridge sessions
 
-Anthropic's solution: a progress file alongside git history. The agent reads the progress file, checks recent git log, and understands current state without being told.
+Anthropic's solution: a progress file alongside git history (S2). The agent reads the progress file, checks recent git log, and understands current state without being told.
 
 The general principle: **anything the agent needs to know across sessions should be in a file, not in your memory.** This includes:
 
@@ -444,7 +444,7 @@ Memory is a hint, not authority. Old terminal output is especially dangerous bec
 
 ### Update state with the code
 
-Progress files drift unless they move with the implementation. When a slice changes current state, update the state or progress artifact in the same commit as the code whenever practical.
+Progress files drift unless they move with the implementation, so bind state to a revision. When the state file lives in the product repository, update it in the same commit as the code whenever practical. When it lives elsewhere (a separate plans repository, or local only), each update names the product revision it describes. The project guide records which placement the project uses.
 
 A strong handoff is a green commit that carries its own truth: code, tests, state, and any locked decisions. A separate note written later can be useful, but it is weaker evidence than a commit that updates the product and its current-state document together.
 
@@ -464,7 +464,7 @@ Know which parts of a published artifact are generated and which are hand-writte
 
 ### Re-orient before acting
 
-Every session should start with orientation: read the current state, check what's changed, verify the baseline still works. Anthropic's harness architecture makes this explicit. Every session follows: **Orient** (read progress, task list, recent git history) → **Verify baseline** (test that existing functionality still works) → **Build** (implement the next thing).
+Every session should start with orientation: read the current state, check what's changed, verify the baseline still works. Anthropic's harness architecture makes this explicit (S2). Every session follows: **Orient** (read progress, task list, recent git history) → **Verify baseline** (test that existing functionality still works) → **Build** (implement the next thing).
 
 Skipping orientation is how you get an agent that "fixes" something that was already working, or builds on top of a broken foundation from the previous session.
 
@@ -520,7 +520,7 @@ The stop is the point. Two of the first several two-phase briefs on one project 
 
 Long-lived builder sessions degrade. Context fills with history, instructions thin, and the agent's reports drift from the repository. One builder kept alive across four fix rounds reached roughly 425,000 tokens of history and misreported its commits twice, while the reviewer spent roughly 563,000 tokens re-reviewing each round.
 
-The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at what you can actually review as the work comes back. On one eight-core workstation that limit was two.
+The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at the lower of two limits: what you can review as the work comes back, and what the machine can run, since builds and test suites compete for cores. On one eight-core workstation the limit was two.
 
 ### Design agent roles from real professions
 
@@ -552,11 +552,11 @@ When agents produce work products (not just code: reports, analyses, decisions),
 
 Without this boundary, AI can effectively self-certify its own work. The draft/canonical split makes human review a part of the system, not just a good intention.
 
-### Parallel investigation, not parallel implementation
+### Parallel work: investigate freely, build on separate files
 
-Multiple agents investigating different hypotheses simultaneously (debugging, research, code archaeology) is a superpower. Multiple agents implementing code in parallel usually causes problems: merge conflicts, inconsistent patterns, duplicate work.
+Multiple agents investigating different hypotheses simultaneously (debugging, research, code archaeology) is a superpower. Multiple agents implementing in parallel on overlapping files usually causes problems: merge conflicts, inconsistent patterns, duplicate work.
 
-Use parallelism for divergent work (investigation). Use sequential work for convergent work (implementation).
+Use parallelism freely for divergent work (investigation). For implementation, run builders in parallel only when each has its own files and its own worktree, and stay inside the concurrency cap above.
 
 ### Real-time messages are not durable state
 
@@ -600,7 +600,7 @@ These are specific failure modes observed across many projects. Each one is temp
 
 When something breaks, the instinct is to tell the agent "fix this error." The agent will apply a patch. The patch will address the symptom. The root cause will remain, and you'll see a different symptom ten minutes later.
 
-**Instead:** investigate why it broke. Have the agent explain the error, trace the cause, and propose a fix that addresses the root. This takes three minutes longer and saves thirty.
+**Instead:** investigate why it broke. Have the agent explain the error, trace the cause, and propose a fix that addresses the root. This takes a little longer and removes the cause.
 
 ### Rubber-stamping
 
@@ -610,7 +610,7 @@ This gets harder as you trust the agent more, which is when it matters most. The
 
 ### One-shotting complex work
 
-Asking the agent to build an entire feature, page, or system in one request. Anthropic's research documented this failure mode explicitly: agents given high-level prompts try to one-shot and produce incomplete, low-quality results.
+Asking the agent to build an entire feature, page, or system in one request. Anthropic's research documented this failure mode explicitly: agents given high-level prompts try to one-shot and produce incomplete, low-quality results (S2).
 
 **Instead:** break work into steps. Each step should be small enough to verify before moving to the next.
 
@@ -720,7 +720,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 - [ ] Build in human stop points between slices
 - [ ] AI enforces constraints; humans make acceptance decisions
 - [ ] Put important outcomes in durable artifacts, not broker or chat messages
-- [ ] Use parallel agents for investigation, sequential for implementation
+- [ ] Use parallel agents for investigation; run parallel builders only on separate files
 - [ ] Read git log and status yourself after every builder report
 - [ ] Fresh builder per sub-batch; one independent review per sub-batch
 - [ ] Two-phase briefs when the premise might be wrong: audit and red test, then ratify
@@ -751,11 +751,11 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 **The build, via subagents (§5, §9).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents: spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
 
-**What the separation caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Builder/reviewer separation (§9) earning its cost in one stroke.
+**What the separation caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Every per-task review was already separate from its builder (§9), and each one passed. The review of the whole change is what found it.
 
 **The operating-model sync (§3).** Midway, the human and agent kept colliding: the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." Written down, the friction stopped.
 
-**Finishing (§7, §8).** Done meant green (full suite, linters, types), verified by the human's own eyes on the diff, not the agent's summary. State files and the one rolling plan were updated in the same arc, and the work merged on green.
+**Finishing (§7, §8).** The gates were green (full suite, linters, types), and the human read the diff, not the agent's summary. Section 7 adds one more step before "done": seeing the feature work on its real path. State files and the one rolling plan were updated in the same arc, and the work merged on green.
 
 The whole session is just the manual's practices in sequence. None of it was improvised; all of it was the method.
 
@@ -763,7 +763,7 @@ The whole session is just the manual's practices in sequence. None of it was imp
 
 ## Case Study: Two Ways to Build the Same Product
 
-*From the public build record of usabl, an accessibility proof engine. The method docs are linked at the end of this section. Where the lesson is specific to that product it is labeled as such.*
+*From the build record of usabl, an accessibility proof engine. The product is public and the build record is private; its source documents are named at the end of this section. Where the lesson is specific to that product it is labeled as such.*
 
 There is no one way to build with agents. The same product, under the same owner and the same quality bar, was built two different ways in two consecutive releases. Both worked. The parts that stayed fixed are the parts worth copying.
 
@@ -826,23 +826,22 @@ Sources for this section: the usabl build logs, quality bars, and role definitio
 
 ## Sources
 
+Each entry names the section it supports, a short quote from the page, and the month the page was read.
+
 ### Research
-- [Anthropic: Agentic coding and persistent returns to expertise](https://www.anthropic.com/research/claude-code-expertise): ~400K sessions, domain expertise as primary success predictor
-- [Anthropic: Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents): session continuity, two-agent harness, progress files
-- [Anthropic: How AI is transforming work at Anthropic](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic): internal study, 200K transcripts, supervision paradox
-- [Anthropic: 2026 Agentic Coding Trends Report](https://resources.anthropic.com/2026-agentic-coding-trends-report): industry trends, security at scale
-- [CodeScene: Agentic AI Coding: Best Practice Patterns](https://codescene.com/blog/agentic-ai-coding-best-practice-patterns-for-speed-with-quality): peer-reviewed code health research, 39 codebases, 60% defect increase in unhealthy code
+- **S1.** [Anthropic: Agentic coding and persistent returns to expertise](https://www.anthropic.com/research/claude-code-expertise) (2026-06). Supports section 1, "You're the architect. The agent is the builder.": "domain expertise, and not coding proficiency, amplifies effective use of the tool". Read 2026-11.
+- **S2.** [Anthropic: Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) (2025-11). Supports sections 4, 5, 8, and 11 on specifications, small steps, session continuity, and one-shotting: "the agent tended to try to do too much at once". Read 2026-11.
+- **S3.** [Anthropic: Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps) (2026-03). Supports section 5, "TDD works better with agents, not worse", and section 7, "Separate who builds from who evaluates": "agents tend to respond by confidently praising the work". Read 2026-11.
+- **S4.** [Tornhill and Borg: Code Red: The Business Impact of Code Quality](https://arxiv.org/abs/2203.04374) (2022, International Conference on Technical Debt). Supports section 7, "Automated gates are force multipliers": "low quality code contains 15 times more defects than high quality code". Read 2026-11.
+- **S5.** [Borg, Hagatulah, Tornhill, and Söderberg: Code for Machines, Not Just Humans](https://arxiv.org/abs/2601.02200) (2026, accepted for FORGE 2026). Supports section 7, "Automated gates are force multipliers": "LLMs tasked with refactoring have significantly lower break rates on code in the Healthy CodeHealth range". Read 2026-11.
+- **S6.** [CodeScene: Agentic AI Coding: Best Practice Patterns](https://codescene.com/blog/agentic-ai-coding-best-practice-patterns-for-speed-with-quality) (undated). Supports section 7, "Automated gates are force multipliers": "you want to aim for a Code Health of at least 9.5". Read 2026-11.
 
 ### Practitioner Guides
-- [Simon Willison: Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/): TDD with agents, lethal trifecta, domain knowledge hoarding
-- [Addy Osmani: My LLM coding workflow going into 2026](https://addyosmani.com/blog/ai-coding-workflow/): iterative chunks, review discipline, automated gates
-- [Nx Blog: A Practical Guide on Effective AI Use](https://nx.dev/blog/practical-guide-effective-ai-coding): AI as peer programmer
-- [Edward Donner: AI Coder: Vibe Coder to Agentic Engineer](https://edwarddonner.com/2026/02/17/ai-coder-vibe-coder-to-agentic-engineer/): progression framework, multi-agent patterns
-
-### Community Resources
-- [BuildBetter: AGENTS.md Complete Guide for Engineering Teams](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/): operating manual as universal standard
-- [Wes McKinney (MotherDuck): Vibe Coding Is Dangerous, Agentic Engineering Isn't](https://motherduck.com/blog/vibe-coding-dangerous-agentic-engineering-wes-mckinney/): scope, design, taste, conceptual integrity
-- [Andrej Karpathy](https://x.com/karpathy): original "vibe coding" and "agentic engineering" distinctions
+- **S7.** [Simon Willison: Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) (2026-02). Supports section 5, "TDD works better with agents, not worse": "test-first development helps agents write more succinct and reliable code". Read 2026-11.
+- **S8.** [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025-06). Supports section 2, "Security defaults from the start": "an attacker can easily trick it into accessing your private data and sending it to that attacker". Read 2026-11.
+- **S9.** [Addy Osmani: My LLM coding workflow going into 2026](https://addyosmani.com/blog/ai-coding-workflow/) (2026-01). Supports section 4, "Specs before code"; section 5, "Small, verifiable steps"; and section 7, "Automated gates are force multipliers": "Start with a clear plan (specs before code)". Read 2026-11.
+- **S10.** [Anthropic: Claude Code: Best practices for agentic coding](https://web.archive.org/web/20250602202220/https://www.anthropic.com/engineering/claude-code-best-practices) (2025-04, archived copy; the original address now leads to a different page). Supports section 5, "Plan when choices matter, just build when they don't": "Explore, plan, code, commit". Read 2026-11.
+- **S11.** [BuildBetter: AGENTS.md Complete Guide for Engineering Teams](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/) (2026-05). Supports section 2, "The project operating manual": "it is read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q". Read 2026-11.
 
 ---
 
