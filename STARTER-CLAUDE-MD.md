@@ -6,11 +6,11 @@ compatibility). Fill in the bracketed sections. Delete the comments. Keep it und
 at this one rather than create a second source of truth.
 
 If you name the file `AGENTS.md`, add a `CLAUDE.md` that contains the single line
-`@AGENTS.md`. Claude Code reads `AGENTS.md` only when no `CLAUDE.md` exists in the
-project directory or any directory above it, and it skips the file without a warning
+`@AGENTS.md`. By default, Claude Code reads `AGENTS.md` only when no `CLAUDE.md` or
+`CLAUDE.local.md` exists in the project directory or any directory above it
 ([Claude Code documentation](https://code.claude.com/docs/en/memory), read 2026-11).
-Then check that the guide loaded: start a session with tools turned off and ask it
-to quote one line from the guide.
+Then confirm the guide loaded. In Claude Code, run `/context all` and check the list
+under Memory files.
 
 For the reasoning behind these sections, see [FIELD-MANUAL.md](FIELD-MANUAL.md). For
 the steps this guide supports, see [METHOD.md](METHOD.md).

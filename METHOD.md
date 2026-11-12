@@ -185,7 +185,7 @@ docs/
 .work/                         local packets, review records, handoffs (gitignored unless the project decides otherwise)
 ```
 
-This layout keeps the plan in the product repository. A project that keeps its plans and build records elsewhere (a separate repository, or local only) uses the same names there, and each update names the product revision it describes. Record the choice in the project guide.
+This layout keeps the plan in the product repository. A project may keep its plans and build records elsewhere. The rule that binds them to a revision is in FIELD-MANUAL.md, section 8 (update state with the code). Record the choice in the project guide.
 
 ## 5. Orient before acting
 
