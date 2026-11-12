@@ -16,6 +16,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names.
 - `templates/` - fill-in artifacts. `examples/` - a worked slice and anonymized lessons.
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.
+- `CLAUDE.md` - one line that imports this file, so Claude Code loads it even when another `CLAUDE.md` sits above the repository.
 
 ## Where things belong
 

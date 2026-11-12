@@ -5,12 +5,19 @@ compatibility). Fill in the bracketed sections. Delete the comments. Keep it und
 200 lines. Noise dilutes signal. Other tool-specific instruction files should point
 at this one rather than create a second source of truth.
 
+If you name the file `AGENTS.md`, add a `CLAUDE.md` that contains the single line
+`@AGENTS.md`. Claude Code reads `AGENTS.md` only when no `CLAUDE.md` exists in the
+project directory or any directory above it, and it skips the file without a warning
+([Claude Code documentation](https://code.claude.com/docs/en/memory), read 2026-11).
+Then check that the guide loaded: start a session with tools turned off and ask it
+to quote one line from the guide.
+
 For the reasoning behind these sections, see [FIELD-MANUAL.md](FIELD-MANUAL.md). For
 the steps this guide supports, see [METHOD.md](METHOD.md).
 
 ---
 
-```markdown
+````markdown
 # CLAUDE.md
 
 ## Project
@@ -106,9 +113,14 @@ These are non-negotiable constraints, not guidelines.
 - Don't ask "does this look good?" after every edit; show work at milestones
 - When multiple approaches exist, propose and explain trade-offs before building
 - Bias toward action on clear tasks; ask before acting only when the wrong choice is costly
-- Don't add features, abstractions, or error handling beyond what the task requires
+- Don't add features or abstractions beyond the specification. The failure states the specification names are part of the task
 - Don't suggest easier alternatives when things get hard; push through
-- Stop and ask before anything irreversible or outward-facing: publishing, deleting data, force-pushing shared branches, signing, sending to an external service, spending money
+- Stop and ask before:
+  - Any irreversible or destructive action.
+  - Publishing anything beyond the local machine: pushes to shared branches, releases, posts, external service calls that store data.
+  - Force-pushing, signing, or writing to a public log.
+  - Changing scope, architecture boundaries, or security posture beyond the current plan.
+  - Spending significant money or quota.
 - Report only what you observed. Never report a commit hash, test result, or file state you did not read back from the repository
 - End handoffs with what changed, what was validated, and what was not run.
 
@@ -118,7 +130,7 @@ These are non-negotiable constraints, not guidelines.
 - Intended identity: [identity rule]
 - Publishing requires: [checks and approval]
 - Preserve unrelated local changes. A dirty worktree is not disposable.
-- Planning documents and internal build notes stay out of the shipped history unless this project decides otherwise.
+- Plans, state, and build notes live in: [this repository, a separate repository, or local only]. An update kept outside this repository names the revision it describes.
 
 ## Handoff
 
@@ -129,7 +141,7 @@ Every substantial handoff states: what changed, what was validated, what was not
 [Project-specific terminology, business rules, or domain knowledge that
 the agent wouldn't know from reading the code alone. Delete this section
 if the code is self-explanatory.]
-```
+````
 
 ---
 
