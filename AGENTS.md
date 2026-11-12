@@ -17,6 +17,8 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `templates/` - fill-in artifacts. `examples/` - a worked slice and anonymized lessons.
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.
 - `CLAUDE.md` - one line that imports this file, so Claude Code loads it even when another `CLAUDE.md` sits above the repository.
+- `scripts/check_manual.py` - checks the repository against its own rules. `scripts/test_check_manual.py` - its unit tests. Python 3, standard library only.
+- `.github/workflows/check.yml` - runs the unit tests and the checker on every push to `main` and on every pull request.
 
 ## Where things belong
 
@@ -24,6 +26,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - A step, an order, a list to run through: `METHOD.md` or `CHECKLISTS.md`. State it once; link to the manual for the why. Do not restate the manual's reasoning in the method or the reasoning's steps in the manual.
 - A fill-in artifact: `templates/`. The manual never carries templates.
 - A rule an assistant must follow on any project: `AGENT-CONTRACT.md`. A rule for editing this repo: this file.
+- A rule a script can check: a check in `scripts/check_manual.py`, with a unit test that fails without it.
 - Real project lore, private tool names, personal workflow: nowhere in this repo. Generalize the lesson first or leave it out.
 
 ## Working Principles
@@ -53,7 +56,7 @@ When adding sources, prefer primary sources, practitioner posts with concrete wo
 
 ## Editing Conventions
 
-- Markdown only; keep formatting simple.
+- Documents are Markdown only; keep formatting simple. The only code in the repo is the checker in `scripts/`.
 - Use short headings and tight paragraphs.
 - Keep examples small and copy-pasteable.
 - No em dashes and no doubled hyphens as punctuation anywhere in the repo; use a period, comma, colon, semicolon, or parentheses. Straight quotes. Section signs and arrows in existing text are fine.
@@ -67,8 +70,10 @@ When adding sources, prefer primary sources, practitioner posts with concrete wo
 Before finishing edits:
 
 - Read the changed section in context.
+- Run `python3 -m unittest scripts/test_check_manual.py` from the repository root. It must pass.
+- Run `python3 scripts/check_manual.py`. It prints one line for each of its ten checks. CI requires the checks named after `--only` in `.github/workflows/check.yml`, and each of those must print `passed`. The other checks do not pass yet, because the documents do not meet their rules. Do not add a problem to any check.
+- Open every outside link you added or changed. The checker does not fetch web pages.
 - Check heading numbering and duplicate headings.
-- Verify links if sources or tool-support claims changed.
 - Confirm the starter template still matches the manual's guidance.
 
 ## Security and Safety

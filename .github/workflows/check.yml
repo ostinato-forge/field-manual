@@ -1,0 +1,23 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Pinned to the commit of actions/checkout v7.0.1.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Unit tests
+        run: env -i HOME="$(mktemp -d)" PATH="$PATH" python3 -m unittest scripts/test_check_manual.py
+      - name: Check the repository
+        run: python3 scripts/check_manual.py --only links,fences,punctuation,sources
