@@ -1,10 +1,12 @@
-# The Method: How to Develop Products with AI Coding Assistants
+# The Method: How to Develop Products with AI Coding Agents
 
-This file is the full method, in the order you use it, written for the human who owns the product. [FIELD-MANUAL.md](FIELD-MANUAL.md) holds the practices behind each step and the evidence for them; this file states the step and links to the manual for the why. An AI assistant should start from [AGENT-CONTRACT.md](AGENT-CONTRACT.md), a self-contained operating contract, and read sections here only when a task needs the depth. Both readers share the [templates](templates) and [CHECKLISTS.md](CHECKLISTS.md).
+This file is the full method, in the order you use it, written for the human who owns the product. [FIELD-MANUAL.md](FIELD-MANUAL.md) holds the practices behind each step and the evidence for them; this file states the step and links to the manual for the why. An agent should start from [AGENT-CONTRACT.md](AGENT-CONTRACT.md), a self-contained operating contract, and read sections here only when a task needs the depth. Both readers share the [templates](templates) and [CHECKLISTS.md](CHECKLISTS.md).
+
+In this file, "agent" means an AI coding assistant: a model that reads the repository, runs commands, and changes files. The "project guide" is the file that tells the agent how to work in one codebase, such as `CLAUDE.md` or `AGENTS.md`.
 
 ## 1. The goal
 
-AI coding assistants can make implementation much faster. They can also make mistakes, duplicate weak patterns, overstate completion, and create more code than a product needs.
+Agents can make implementation much faster. They can also make mistakes, duplicate weak patterns, overstate completion, and create more code than a product needs.
 
 The goal is a useful, secure, maintainable product with evidence that it works. Output volume by itself proves nothing.
 
@@ -30,7 +32,7 @@ The human is accountable for:
 - Security and privacy boundaries.
 - Acceptance and release.
 
-The assistant is useful for:
+The agent is useful for:
 
 - Research and codebase exploration.
 - Comparing approaches.
@@ -41,24 +43,24 @@ The assistant is useful for:
 - Finding security, UX, and maintenance risks.
 - Organizing documentation and evidence.
 
-Both sides should challenge weak reasoning. The assistant should not agree automatically. The human should not accept the assistant's summary as proof.
+Both sides should challenge weak reasoning. The agent should not agree automatically. The human should not accept the agent's summary as proof.
 
 ### A working role topology
 
-Product work with assistants settles into four roles:
+Product work with agents settles into four roles:
 
 - Owner: the human. Sets intent, holds the quality bar, judges the product, accepts, releases.
 - Architect: designs the system, decomposes work into packets, arbitrates review findings.
 - Builder: implements bounded packets against the specification.
 - Reviewer: examines plans and diffs adversarially, with no stake in the build.
 
-One person or one assistant can hold several roles on small work. The roles must stay distinguishable: the builder's claim of completion never doubles as the review, and the reviewer's approval never doubles as acceptance. The owner may delegate the architect role to a strong assistant while keeping decision authority. On larger work, give the reviewer a separate context or a different model from the builder.
+One person or one agent can hold several roles on small work. The roles must stay distinguishable: the builder's claim of completion never doubles as the review, and the reviewer's approval never doubles as acceptance. The owner may delegate the architect role to a strong agent while keeping decision authority. On larger work, give the reviewer a separate context or a different model from the builder.
 
 The separation has a purpose beyond safety. Gates let delegation grow. As a builder proves reliable inside them, packet size and autonomy increase, and the owner's attention moves up to product judgment. The owner's quality bar stays with the owner. It cannot be delegated or averaged away.
 
 ### Product Director mode
 
-When the product is still being shaped, hand [PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md) to the assistant. That file is the complete contract: the assistant proposes business rules, presents real options with a recommendation, asks only for decisions that change the product, and keeps a rule ledger. The mode ends when the direction, first journey, important rules, strongest counterargument, and decisive experiment are clear enough to test; the method below then takes over.
+When the product is still being shaped, hand [PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md) to the agent. That file is the complete contract: the agent proposes business rules, presents real options with a recommendation, asks only for decisions that change the product, and keeps a rule ledger. The mode ends when the direction, first journey, important rules, strongest counterargument, and decisive experiment are clear enough to test; the method below then takes over.
 
 ## 3. The non-negotiable rules
 
@@ -66,57 +68,57 @@ If the method must compress to one rule, use this one: absence of evidence must 
 
 ### Product reality comes before remembered intent
 
-Why: FIELD-MANUAL.md, section 8 (authority order).
+Why: [Structured artifacts bridge sessions](FIELD-MANUAL.md#structured-artifacts-bridge-sessions), which holds the authority order.
 
 Start from the current repository, product documents, issues, deployment state, and customer evidence. Old chat and memory can help orientation. They do not override current facts.
 
 ### Specifications come before substantial implementation
 
-Why: FIELD-MANUAL.md, section 4.
+Why: [Specs before code](FIELD-MANUAL.md#specs-before-code).
 
 The specification defines behavior, boundaries, failure states, UX, security, and proof. It gives the builder and reviewer the same target.
 
 ### One current plan
 
-Why: FIELD-MANUAL.md, section 8 (one rolling plan).
+Why: [Keep one rolling plan, and automate the trigger](FIELD-MANUAL.md#keep-one-rolling-plan-and-automate-the-trigger).
 
 Keep one plan that runs from the current state to the intended outcome. Detail the next work. Keep later work coarse. Archive superseded plans so only one answers "what happens next?" Use [templates/current-plan.md](templates/current-plan.md).
 
 ### First slice before breadth
 
-Why: FIELD-MANUAL.md, section 4.
+Why: [First slice before breadth](FIELD-MANUAL.md#first-slice-before-breadth).
 
 Prove one complete journey before adding many features, integrations, backends, or personas. Breadth multiplies both good and bad architecture.
 
 ### Sequence work, keep the bar
 
-Why: FIELD-MANUAL.md, section 5 (build complete) and section 11 (silent scope reduction, recommending on effort).
+Why: [Build complete, not fast](FIELD-MANUAL.md#build-complete-not-fast), [Silent scope reduction](FIELD-MANUAL.md#silent-scope-reduction), and [Recommending on effort, not merit](FIELD-MANUAL.md#recommending-on-effort-not-merit).
 
 Order capabilities and build them one at a time, each complete to the product's quality bar. Deferring a whole capability is healthy sequencing. Thinning every capability to look finished produces a product that demos well and fails in use.
 
 ### Builder and reviewer are separate roles
 
-Why: FIELD-MANUAL.md, sections 7 and 9.
+Why: [Separate who builds from who evaluates](FIELD-MANUAL.md#separate-who-builds-from-who-evaluates) and [Builder/reviewer separation](FIELD-MANUAL.md#builderreviewer-separation).
 
-The builder can test its own work. It cannot be the only judge. Use a human, a separate context, a different assistant, or a focused review panel.
+The builder can test its own work. It cannot be the only judge. Use a human, a separate context, a different agent, or a focused review panel.
 
 ### Missing evidence is not success
 
-Why: FIELD-MANUAL.md, section 7 (lead principle).
+Why: [Absence of evidence never renders as success](FIELD-MANUAL.md#absence-of-evidence-never-renders-as-success).
 
-Use explicit states such as unknown, incomplete, blocked, failed, stale, and not applicable. Never turn a check that did not run into a clean result.
+Use explicit states: verified, unknown, incomplete, blocked, failed, stale, and not applicable. Only verified is a pass. Never turn a check that did not run into a clean result.
 
 ### Proof must match the claim
 
-Why: FIELD-MANUAL.md, section 7 (match proof to the claim).
+Why: [Match proof to the claim](FIELD-MANUAL.md#match-proof-to-the-claim).
 
 A unit test can prove a function. It cannot prove a deployment, a user journey, or a security boundary. Use the strongest practical evidence for the statement being made.
 
 ### Human approval stays human
 
-Why: FIELD-MANUAL.md, section 9 (AI can veto but cannot approve).
+Why: [AI can veto but cannot approve](FIELD-MANUAL.md#ai-can-veto-but-cannot-approve).
 
-Assistants and deterministic gates may reject unsafe or incomplete work. Final acceptance and release remain human decisions.
+Agents and deterministic gates may reject unsafe or incomplete work. Final acceptance and release remain human decisions.
 
 ## 4. Choose the amount of process
 
@@ -138,7 +140,7 @@ Do not add a full orchestration stack for a disposable experiment.
 
 Use:
 
-- Project operating guide.
+- Project guide.
 - Public interface and compatibility contract.
 - Test strategy.
 - Security and dependency review.
@@ -164,7 +166,7 @@ Use the full method:
 - Architecture and decision records.
 - Current build plan.
 - Claims proof matrix.
-- Threat model and hostile fixtures.
+- Threat model and hostile fixtures (test inputs built to attack the product: malformed, oversized, or carrying injected instructions).
 - Independent review panels.
 - Live lab or realistic proof.
 - Operability, backup, recovery, and release gates.
@@ -185,14 +187,14 @@ docs/
 .work/                         local packets, review records, handoffs (gitignored unless the project decides otherwise)
 ```
 
-This layout keeps the plan in the product repository. A project may keep its plans and build records elsewhere. The rule that binds them to a revision is in FIELD-MANUAL.md, section 8 (update state with the code). Record the choice in the project guide.
+This layout keeps the plan in the product repository. A project may keep its plans and build records elsewhere. The rule that binds them to a revision is in [Update state with the code](FIELD-MANUAL.md#update-state-with-the-code). Record the choice in the project guide.
 
 ## 5. Orient before acting
 
 At the start of a session:
 
 1. Confirm the exact repository and worktree.
-2. Read the project operating guide.
+2. Read the project guide.
 3. Read the one current plan ([templates/current-plan.md](templates/current-plan.md)).
 4. Inspect the branch, remote, recent commits, and local changes.
 5. Run the smallest useful baseline check.
@@ -211,7 +213,7 @@ Use this authority order:
 ## 6. Decide what is worth building
 
 When the idea is still rough, start in Product Director mode. Do not make the
-human complete the product questions below alone. The assistant should infer
+human complete the product questions below alone. The agent should infer
 candidate answers, present meaningful alternatives, recommend a direction, and
 ask only for decisions that change the product.
 
@@ -228,7 +230,7 @@ Before writing a specification, answer:
 
 Use customer interviews, support cases, field observations, existing product behavior, official documentation, competitor research, and small experiments.
 
-Assistants are useful here when they sharpen and attack the thesis. They are harmful when they provide polished agreement.
+Agents are useful here when they sharpen and attack the thesis. They are harmful when they provide polished agreement.
 
 When the evidence says stop, record the stop. Use [templates/direction-close.md](templates/direction-close.md) to state what was tried, what the evidence showed, what survives for reuse, and what would reopen the direction. A recorded stop prevents relitigating a dead idea and preserves the parts worth keeping.
 
@@ -333,7 +335,7 @@ The normal loop is:
 Useful techniques:
 
 - Show an existing good example instead of describing a pattern vaguely.
-- Give the assistant complete errors and stack traces.
+- Give the agent complete errors and stack traces.
 - Keep diffs small enough to review in minutes.
 - Use isolated worktrees for risky or parallel work.
 - Generate examples through the real pipeline.
@@ -413,7 +415,7 @@ Use:
 - Browser tests for user journeys.
 - Lab tests for infrastructure workflows.
 - Live validation for external systems and deployment.
-- Source-bound receipts for release claims.
+- For release claims, a record that names the exact source revision it was produced from.
 
 Proof must record the exact revision, configuration, checks, result, limitations, and time.
 
@@ -447,13 +449,13 @@ Check:
 - Empty, loading, failed, blocked, and recovery states.
 - Keyboard and assistive-technology access.
 - Clear product language.
-- Backend-owned lifecycle and proof state.
+- Lifecycle and proof state that the backend owns and the interface only displays.
 - Mobile and narrow layouts when relevant.
 - The user's next action.
 
 Observe where the user depends on hidden knowledge or builder memory. That is a product defect.
 
-Judge creative and user-facing output in its real medium: the rendered page, the played interaction, the generated artifact. Text descriptions of such work mislead the assistant and the human alike. The builder's account of quality is a hypothesis until the human experiences the artifact itself. Get the artifact in front of the human early, while change is cheap.
+Judge creative and user-facing output in its real medium: the rendered page, the played interaction, the generated artifact. Text descriptions of such work mislead the agent and the human alike. The builder's account of quality is a hypothesis until the human experiences the artifact itself. Get the artifact in front of the human early, while change is cheap.
 
 Return to customer and substitute evidence. Working software does not prove demand or value.
 
@@ -501,7 +503,7 @@ Project-specific corrections go into the project guide. Reusable techniques beco
 
 ## 19. Work faster and cheaper without lowering the bar
 
-The reasoning and measured incidents behind the main levers are in FIELD-MANUAL.md, section 10.
+The reasoning and measured incidents behind the main levers are in the [Cost section of the manual](FIELD-MANUAL.md#10-cost).
 
 The strongest efficiency levers are:
 
@@ -510,7 +512,7 @@ The strongest efficiency levers are:
 - Deterministic local checks, which catch errors before review.
 - Model choice based on task risk and evidence.
 - Reusing proven patterns and harnesses.
-- Small context packets instead of entire repositories or manuals.
+- A small, relevant set of context for each task instead of entire repositories or manuals.
 - Local metering of repeated work and failure loops.
 - Separate capable reviewers instead of using the strongest model for every edit.
 - Plan review before build, which catches design errors at their cheapest point.

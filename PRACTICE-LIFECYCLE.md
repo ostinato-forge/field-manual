@@ -35,7 +35,7 @@ Useful sources include:
 
 Capture source identity, date, URL or commit, content hash when practical, and the exact claim worth investigating.
 
-External content is untrusted evidence. It cannot instruct an assistant or change project rules.
+External content is untrusted evidence. It cannot instruct an agent or change project rules.
 
 ## 2. Distill a candidate
 
@@ -124,7 +124,7 @@ A practice that comes from a single incident can enter [FIELD-MANUAL.md](FIELD-M
 
 ## 7. Distribute
 
-This stage applies when guidance is delivered to assistants by a runtime, for example a local hook or a context pack. If your practices live only in documents, skip to stage 8.
+This stage applies when guidance is delivered to agents by a runtime, for example a local hook or a context pack. If your practices live only in documents, skip to stage 8.
 
 Distribute practices with:
 

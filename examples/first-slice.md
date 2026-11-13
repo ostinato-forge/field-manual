@@ -2,7 +2,7 @@
 
 ## Situation
 
-A team wants an assistant to build a web tool that reads a deployment record and tells an operator whether a release is safe to promote.
+A team wants an agent to build a web tool that reads a deployment record and tells an operator whether a release is safe to promote.
 
 ## Product decision
 
@@ -63,7 +63,7 @@ The reviewer checks:
 
 ## Red team
 
-Hostile fixtures include:
+Hostile fixtures (test inputs built to break the tool) include:
 
 - Duplicate check names.
 - Unknown status.

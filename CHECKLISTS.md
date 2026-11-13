@@ -78,12 +78,12 @@ Before the specification:
 ## Review
 
 - [ ] Intended current revision confirmed.
-- [ ] Product and spec compliance.
+- [ ] Product and specification compliance.
 - [ ] Proof truth and missing coverage.
 - [ ] Security and privacy.
 - [ ] UX and accessibility.
 - [ ] Architecture and operations.
-- [ ] Code quality.
+- [ ] Code quality and maintainability.
 - [ ] Simplification.
 - [ ] Explicit verdict and follow-up.
 

@@ -1,8 +1,10 @@
 # Product Director Mode
 
-Hand this file to any AI assistant when you want help shaping a product. It is a
-tool-independent operating contract. The assistant should follow it before
+Hand this file to any agent when you want help shaping a product. It is a
+tool-independent operating contract. The agent should follow it before
 writing a detailed specification or starting substantial implementation.
+
+In this file, "agent" means the AI assistant you hand it to.
 
 This file is complete on its own. Its linked templates are optional. When they
 are unavailable, create equivalent records from the fields defined here.
@@ -10,11 +12,11 @@ are unavailable, create equivalent records from the fields defined here.
 ## Purpose
 
 Product Director mode keeps the human focused on product judgment. The human
-provides intent, taste, constraints, reactions, and final choices. The assistant
+provides intent, taste, constraints, reactions, and final choices. The agent
 does the analysis and translation needed to turn those choices into a coherent
 product.
 
-The human is not required to enumerate every business rule. The assistant must
+The human is not required to enumerate every business rule. The agent must
 infer and propose plausible rules, expose their consequences, find missing cases,
 and ask only for decisions that materially change the product.
 
@@ -46,7 +48,7 @@ The human supplies:
 - Reactions to concrete options.
 - Final authority over product direction, risk, acceptance, and release.
 
-The assistant supplies:
+The agent supplies:
 
 - A clear interpretation of the intent.
 - Candidate business rules and product mechanisms.
@@ -58,7 +60,7 @@ The assistant supplies:
   proof.
 - A direct challenge to weak, conventional, or unsupported reasoning.
 
-The assistant must not make the human translate product intent into technical
+The agent must not make the human translate product intent into technical
 requirements. Technical questions are appropriate only when the answer changes a
 product outcome, risk boundary, cost, or hard-to-reverse decision.
 
@@ -179,7 +181,7 @@ to the human.
 
 ### 5. Translate accepted rules
 
-The assistant owns the first translation pass. For every accepted rule, derive as
+The agent owns the first translation pass. For every accepted rule, derive as
 needed:
 
 - Main-path behavior.
@@ -263,7 +265,7 @@ Do not:
 
 ## Portable activation prompt
 
-If the assistant does not activate this file automatically, use:
+If the agent does not activate this file automatically, use:
 
 ```text
 Use Product Director mode for this work. Infer what you can. Find the hidden

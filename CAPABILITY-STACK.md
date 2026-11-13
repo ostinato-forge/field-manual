@@ -2,7 +2,7 @@
 
 ## Use capabilities, not brands
 
-The method does not require a specific assistant or tool. This file names the capabilities a serious build tends to need, in the order they usually become necessary, so you can recognize a need when it appears and add one layer at a time.
+The method does not require a specific agent or tool. This file names the capabilities a serious build tends to need, in the order they usually become necessary, so you can recognize a need when it appears and add one layer at a time.
 
 Add a tool only when it solves a measured problem. Every added layer has installation, context, security, maintenance, and failure cost.
 
@@ -23,7 +23,7 @@ Measurement, routing, context, and action policy
   |
 Durable build and review orchestration
   |
-Coding assistants and local workers
+Coding agents and local workers
   |
 Tests, browser, lab, security, and release harnesses
   |
@@ -52,7 +52,7 @@ A local, model-free observer of agent lifecycle events that gives sparse determi
 
 ## Measurement and routing
 
-A local substrate below several coding assistants that measures cost, activity, coverage, and waste; routes typed tasks under human-owned policy; provides small relevant context packets; requires receipts and gates; and applies budgets, action envelopes, isolation, and stop controls. Use it when you operate enough assistants or tasks that routing, spend, repeated work, and context loss are measurable problems. Do not enable autonomous execution because the code path exists. Require successful isolation probes, explicit policy, and a release decision.
+A local substrate below several coding agents that measures cost, activity, coverage, and waste; routes typed tasks under human-owned policy; provides a small, relevant set of context for each task; requires receipts and gates; and applies budgets, limits on what each task may do, isolation, and stop controls. Use it when you operate enough agents or tasks that routing, spend, repeated work, and context loss are measurable problems. Do not enable autonomous execution because the code path exists. Require successful isolation probes, explicit policy, and a release decision.
 
 ## Durable orchestration
 
@@ -66,9 +66,9 @@ A harness should name its input, environment, action, expected evidence, pass, f
 
 ## Adoption ladder
 
-### Level 0: disciplined assistant use
+### Level 0: disciplined agent use
 
-- Project operating guide.
+- Project guide.
 - Product brief.
 - One current plan.
 - Tests and git checkpoints.
@@ -86,7 +86,7 @@ Add only what the project needs: identity isolation, local efficiency observatio
 
 Add durable orchestration, builder and reviewer workers, task contracts, cost and time budgets, action policy and stop controls.
 
-### Level 4: measured multi-assistant fleet
+### Level 4: measured multi-agent fleet
 
 Add cross-tool metering, evidence-based routing, small context composition, receipts tied to accepted outcomes, and controlled practice experiments.
 
@@ -96,7 +96,7 @@ Do not advance a level because it looks sophisticated. Advance because the previ
 
 - Use identity isolation when credentials or repositories must not mix.
 - Use local guidance when repeated waste or missing validation appears across sessions.
-- Use metering and routing when several assistants, models, or pricing modes create real allocation choices.
+- Use metering and routing when several agents, models, or pricing modes create real allocation choices.
 - Use durable orchestration when work survives several sessions, roles, retries, or reviewers.
 - Use a new harness when a critical claim remains dependent on model judgment or manual memory.
 - Use the practice lifecycle when new techniques arrive faster than the stable guide should change.

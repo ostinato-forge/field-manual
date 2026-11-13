@@ -24,7 +24,7 @@ the steps this guide supports, see [METHOD.md](METHOD.md).
 
 [One paragraph: what this project does, who it's for, and what stage it's in.]
 
-## Current state
+## Where things are
 
 - Read first: [the one orientation document, usually the current plan]
 - Current plan: [path]
@@ -32,7 +32,7 @@ the steps this guide supports, see [METHOD.md](METHOD.md).
 - Claims proof matrix: [path or none]
 - Product direction and rule ledger: [paths or none]
 - Backlog: [issue tracker]
-- Release state: [state]
+- Release record: [path or none]
 
 ## Authority order
 
@@ -89,6 +89,8 @@ tests/        - mirrors src/ structure
 
 These are non-negotiable constraints, not guidelines.
 
+[The examples below are Python. Replace them with the equivalents for your stack, then delete this line.]
+
 - Never hardcode secrets; use environment variables or secret management
 - Always validate user input at system boundaries
 - Always use parameterized queries, never string interpolation for SQL
@@ -102,7 +104,14 @@ These are non-negotiable constraints, not guidelines.
 ## Review policy
 
 - Builder may implement and self-test. Builder is never the sole reviewer of significant work.
-- Review order: product and spec compliance, proof truth, security and privacy, UX and accessibility, architecture, code quality, simplification.
+- Review order:
+  1. Product and specification compliance.
+  2. Proof truth and missing coverage.
+  3. Security and privacy.
+  4. UX and accessibility.
+  5. Architecture and operations.
+  6. Code quality and maintainability.
+  7. Simplification.
 - Slice plans get independent review before build when risk warrants.
 - Validation reports use exact states: passed, failed, not run, partial, blocked, stale, not applicable. Focused checks are never described as a full green suite.
 - Human owns final acceptance and release.
@@ -114,7 +123,7 @@ These are non-negotiable constraints, not guidelines.
 - When multiple approaches exist, propose and explain trade-offs before building
 - Bias toward action on clear tasks; ask before acting only when the wrong choice is costly
 - Don't add features or abstractions beyond the specification. The failure states the specification names are part of the task
-- Don't suggest easier alternatives when things get hard; push through
+- Don't cut scope without saying so, and don't recommend an option because it is easier. Name the trade-off and let the human decide
 - Stop and ask before:
   - Any irreversible or destructive action.
   - Publishing anything beyond the local machine: pushes to shared branches, releases, posts, external service calls that store data.

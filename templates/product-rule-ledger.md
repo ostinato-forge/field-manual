@@ -8,7 +8,7 @@ Product direction: `[path]`
 
 ## Rule states
 
-- Proposed: the assistant inferred or suggested the rule. The human has not
+- Proposed: the agent inferred or suggested the rule. The human has not
   accepted it.
 - Accepted: the human accepted the rule or an existing authority establishes it.
 - Rejected: the rule was considered and declined.

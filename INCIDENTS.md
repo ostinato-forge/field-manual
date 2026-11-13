@@ -177,7 +177,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-11
 - What happened: A repository kept its maintainer rules in `AGENTS.md`. A `CLAUDE.md` file in a directory above the repository made the coding tool skip `AGENTS.md` at session start, so sessions worked in the repository without its rules. Three probe sessions with tools turned off confirmed it: the file was not loaded by default, was loaded with a setting, and was loaded when a one-line `CLAUDE.md` in the repository imported it.
 - Rule: A guide in the repository is not a guide in the agent's context. Check that it loaded.
-- Supports: FIELD-MANUAL.md, "The project operating manual"
+- Supports: FIELD-MANUAL.md, "The project guide"
 - Record: private session notes
 
 ## I-23: A release blocked by its own evidence gate

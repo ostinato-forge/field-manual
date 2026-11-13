@@ -4,9 +4,9 @@
 
 - Open: no implementation or proof.
 - Implemented: code exists and is wired.
-- Proved: deterministic tests support the claim.
-- Live validated: real or realistic external use supports the claim.
-- Stale: source or architecture changed after evidence was recorded.
+- Proved: deterministic tests cover the claim.
+- Live validated: the real or realistic external path was exercised.
+- Stale: the source or architecture changed after evidence was recorded.
 
 ## Claim record
 
