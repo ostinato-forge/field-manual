@@ -18,7 +18,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.
 - `CLAUDE.md` - one line that imports this file, so Claude Code loads it even when another `CLAUDE.md` sits above the repository.
 - `scripts/check_manual.py` - checks the repository against its own rules. `scripts/test_check_manual.py` - its unit tests. Python 3, standard library only.
-- `.github/workflows/check.yml` - runs the unit tests and the checker on every push to `main` and on every pull request.
+- `.github/workflows/check.yml` - runs the unit tests and the checks that CI requires, on every push to `main` and on every pull request.
 
 ## Where things belong
 
@@ -71,7 +71,7 @@ Before finishing edits:
 
 - Read the changed section in context.
 - Run `python3 -m unittest scripts/test_check_manual.py` from the repository root. It must pass.
-- Run `python3 scripts/check_manual.py`. It prints one line for each of its ten checks. CI requires the checks named after `--only` in `.github/workflows/check.yml`, and each of those must print `passed`. The other checks do not pass yet, because the documents do not meet their rules. Do not add a problem to any check.
+- Run `python3 scripts/check_manual.py`. It prints one line for each of its ten checks. CI requires the checks named after `--only` in `.github/workflows/check.yml`, and each of those must print `passed`. The other checks do not pass yet, because the documents do not meet their rules. A change must not add a new problem to any check's output.
 - Open every outside link you added or changed. The checker does not fetch web pages.
 - Check heading numbering and duplicate headings.
 - Confirm the starter template still matches the manual's guidance.
