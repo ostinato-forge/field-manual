@@ -100,7 +100,7 @@ Order capabilities and build them one at a time, each complete to the product's 
 
 Why: [Separate who builds from who evaluates](FIELD-MANUAL.md#separate-who-builds-from-who-evaluates) and [Builder/reviewer separation](FIELD-MANUAL.md#builderreviewer-separation).
 
-The builder can test its own work. It cannot be the only judge. Use a human, a separate context, a different agent, or a focused review panel.
+The builder can test its own work. It cannot be the only judge. Use a human, a separate context, an agent on a different model, or a focused review panel.
 
 ### Missing evidence is not success
 
@@ -402,8 +402,8 @@ Useful proof levels are:
 
 - Open: no implementation or proof.
 - Implemented: code exists and is wired.
-- Proved: deterministic tests cover the claim.
-- Live validated: the real or realistic external path was exercised.
+- Proved: deterministic tests support the claim.
+- Live validated: the real or realistic external path was exercised, and the result supports the claim.
 - Stale: the source or architecture changed after evidence was recorded.
 
 Use:

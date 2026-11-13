@@ -4,7 +4,7 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 
 ## Three entry points
 
-**Human owner:** read [FIELD-MANUAL.md](FIELD-MANUAL.md) for the practices and why they work, then [METHOD.md](METHOD.md) for the steps in order. Copy [STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md) into your project as its project guide. Use the [templates](templates) for the first slice and [CHECKLISTS.md](CHECKLISTS.md) at each checkpoint.
+**Human owner:** read [FIELD-MANUAL.md](FIELD-MANUAL.md) for the practices and why they work, then [METHOD.md](METHOD.md) for the steps in order. Copy [STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md) into your project as the project guide. Use the [templates](templates) for the first slice and [CHECKLISTS.md](CHECKLISTS.md) at each checkpoint.
 
 **Agent:** read [AGENT-CONTRACT.md](AGENT-CONTRACT.md). It is a self-contained operating contract sized to load at session start. Hand it to an agent with the target project's guide and current plan.
 

@@ -52,7 +52,7 @@ A local, model-free observer of agent lifecycle events that gives sparse determi
 
 ## Measurement and routing
 
-A local substrate below several coding agents that measures cost, activity, coverage, and waste; routes typed tasks under human-owned policy; provides a small, relevant set of context for each task; requires receipts and gates; and applies budgets, limits on what each task may do, isolation, and stop controls. Use it when you operate enough agents or tasks that routing, spend, repeated work, and context loss are measurable problems. Do not enable autonomous execution because the code path exists. Require successful isolation probes, explicit policy, and a release decision.
+A local substrate below several coding agents that measures cost, activity, coverage, and waste; routes typed tasks under human-owned policy; provides a small, relevant set of context for each task; requires receipts (records of what ran, and against which revision) and gates; and applies budgets, limits on what each task may do, isolation, and stop controls. Use it when you operate enough agents or tasks that routing, spend, repeated work, and context loss are measurable problems. Do not enable autonomous execution because the code path exists. Require successful isolation probes, explicit policy, and a release decision.
 
 ## Durable orchestration
 

@@ -124,7 +124,7 @@ A practice that comes from a single incident can enter [FIELD-MANUAL.md](FIELD-M
 
 ## 7. Distribute
 
-This stage applies when guidance is delivered to agents by a runtime, for example a local hook or a context pack. If your practices live only in documents, skip to stage 8.
+This stage applies when guidance is delivered to agents by a runtime, for example a local hook, or a small set of context composed for each task. If your practices live only in documents, skip to stage 8.
 
 Distribute practices with:
 

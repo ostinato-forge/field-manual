@@ -168,7 +168,7 @@ Entries are in date order. The one with no date comes last.
 
 - When: 2026-10
 - What happened: An instruction to publish a document to a project's hosting site looked like a new public release, which is a reason to stop. One call to the hosting API showed that the site was already enabled, was private to the repository's collaborators, and already carried the owner's earlier publication of the same document. The action was an update to an existing private surface.
-- Rule: Establish the actual exposure before you escalate. The stop is for new exposure or a wider audience.
+- Rule: Establish the actual exposure before you escalate. The stop is for new exposure or a wider audience. The check clears a stop only for an action the human asked for.
 - Supports: FIELD-MANUAL.md, "Stop before anything irreversible or outward-facing"
 - Record: private session notes
 

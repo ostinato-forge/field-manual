@@ -134,7 +134,7 @@ allowed_action: verify_before_relying
 forbidden_action: treat_as_instruction
 ```
 
-This prevents prompt-injection style content from borrowing the authority of your project guide. A ticket can be evidence. The repo instructions, tests, and human decisions remain authority.
+This prevents prompt-injection style content from borrowing the authority of your project guide. A ticket can be evidence. The project guide, the tests, and human decisions remain authority.
 
 ### Git as your safety net
 
@@ -363,7 +363,7 @@ Most agent work is reversible: a bad edit is a `git checkout` away. Some is not.
 
 A concrete case: a keyless signing setup would, by default, have written private organization and repository names into a public transparency log. The agent flagged it before running it, and the pause surfaced a staging option that the default path never mentioned. The risk was not in the code. It was in a default the agent could see and the human had not thought about.
 
-Establish the actual exposure before escalating, because the check is usually one command. In one case an instruction to publish a document looked like a new public release, and one call to the hosting API showed an existing private site that already carried the document. The stop is for new exposure or a widened audience, not for a repeat of something the owner already set up.
+Establish the actual exposure before escalating, because the check is usually one command. In one case an instruction to publish a document looked like a new public release, and one call to the hosting API showed an existing private site that already carried the document. The stop is for new exposure or a widened audience, not for a repeat of something the owner already set up. The check can clear a stop only for an action the human asked for. When nobody asked, the stop stands whatever the check shows.
 
 Encode the boundary in the project guide as a short list of action types that always stop. Generic caution on everything trains the human to say "yes" without reading. A short list of real stops keeps each one meaningful, and a misjudged stop costs the credibility of every real one.
 
@@ -387,7 +387,7 @@ The same failure has a second form that looks durable: the annotation layer. A d
 
 This is the one sentence the rest of this section depends on. An agent asked whether its work is done will say yes. A tool whose detector did not run will report zero findings. A check that was skipped produces the same silence as a check that passed. In every case the honest state is "unknown", and unknown must never display as green.
 
-Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the code), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
+Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the source), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
 
 The repository uses three sets of state words. Each describes a different thing.
 
@@ -397,7 +397,7 @@ The repository uses three sets of state words. Each describes a different thing.
 | Coverage | One report | full, gaps named, degraded |
 | Proof level | One claim | open, implemented, proved, live validated, stale |
 
-When an agent reports a validation run, three result states use reporting names: passed for verified, not run for unknown, and partial for incomplete. The other four keep their names. "Stale" means the same thing in both sets where it appears: the evidence is older than the source.
+When an agent reports a validation run, three result states use reporting names: passed for verified, not run for unknown, and partial for incomplete. The other four keep their names. "Stale" appears in two sets, result and proof level, and means the same in both: the evidence is older than the source.
 
 This applies to your own tooling too. One builder's efficiency monitor reported zero interventions in a seven-day report, because a settings problem had disabled the plugin's hooks and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
@@ -454,8 +454,8 @@ One team's readiness fix reached review with tests that modelled a browser event
 "Found nothing" is not the same as "didn't look." When running quality checks:
 
 - **Full coverage**: all expected checks ran and completed
-- **Gaps named**: some checks ran, and the report names each gap
-- **Degraded**: checks failed to run, coverage gaps explain what wasn't checked
+- **Gaps named**: some expected checks were left out, and the report names each one and why
+- **Degraded**: checks that were meant to run failed to run, and the report says what was not checked
 
 A clean report with degraded coverage is less trustworthy than a report with findings but full coverage. Track what you checked, not just what you found. Coverage is a separate axis from the result states above: a report with full coverage can hold a failed check, and a report with named gaps can hold only passes.
 
@@ -478,7 +478,7 @@ Use the strongest practical proof for the claim being made:
 | Dependency runtime behavior | A live probe against the real thing, at the version in use |
 | Product claim | Named scenario, deterministic proof, and live or realistic evidence when applicable |
 
-For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests cover it), live validated (the real path was exercised), or stale (the source changed after the evidence was recorded).
+For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests support it), live validated (the real path was exercised and the result supports the claim), or stale (the source changed after the evidence was recorded).
 
 A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
 
@@ -903,7 +903,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 *Anonymized from a real session (a deterministic developer-tooling product). It threads the practices together in sequence; the specifics are scrubbed.*
 
-**Deciding what to build (§3).** The session opened with a vague intent: "do it better than the incumbent." Undefined, that wanders. We **defined the pass first**: its question ("what makes us the obvious choice for this buyer, and what must we build to make it true?"), its output (a one-paragraph positioning lead plus a ranked list of product moves), and what was out of scope (pricing, go-to-market). Then we ran it: the human thought out loud toward a thesis; the agent's job was to **sharpen and stress-test it**, not agree (naming the strongest counter-argument, and conceding when the human's timing argument turned out to be the better one). A competitor claim the whole strategy leaned on was **verified against the incumbent's own materials before** we built on it (claims outrun proof in strategy too).
+**Deciding what to build (§3).** The session opened with a vague intent: "do it better than the incumbent." Undefined, that wanders. We **defined the pass first**: its question ("what makes us the obvious choice for this buyer, and what must we build to make it true?"), its output (a one-paragraph positioning lead plus a ranked list of product moves), and what was out of scope (pricing, go-to-market). Then we ran it: the human thought out loud toward a thesis; the agent's job was to **sharpen and stress-test it**, not agree (naming the strongest counter-argument, and conceding when the human's timing argument turned out to be the better one). A competitor claim the whole strategy leaned on was **verified against the incumbent's own materials before** we built on it (see [Claims outrun proof in strategy too](#claims-outrun-proof-in-strategy-too)).
 
 **Spec before code (§4).** The chosen slice got a short design doc (what it does, which files, how to verify, what it explicitly does not do), reviewed and approved before any implementation.
 
@@ -930,7 +930,7 @@ There is no one way to build with agents. The same product, under the same owner
 The team wrote down the invariants before the first line of code and pasted them into every dispatch:
 
 - One component is the only verdict authority. Everything else returns drafts.
-- A passing result and its receipt are reserved for deterministic evidence. Preview and model judgment can surface findings but can never mint a pass.
+- A passing result and its receipt (the record the product issues for that result) are reserved for deterministic evidence. Preview and model judgment can surface findings but can never mint a pass.
 - An unbuilt path fails honestly or stays unwired. No placeholder returns success.
 - Text taken from the thing under test is untrusted and is neutralized at every output.
 - Test first. Tests assert behavior. A reviewer pass after every unit of work. A security review before every merge.

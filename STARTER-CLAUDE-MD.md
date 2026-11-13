@@ -89,7 +89,7 @@ tests/        - mirrors src/ structure
 
 These are non-negotiable constraints, not guidelines.
 
-[The examples below are Python. Replace them with the equivalents for your stack, then delete this line.]
+[Two lines below are Python: `shell=True` and `yaml.safe_load()`. Replace those two with the equivalents for your stack and keep the rest. Then delete this line.]
 
 - Never hardcode secrets; use environment variables or secret management
 - Always validate user input at system boundaries
@@ -113,7 +113,7 @@ These are non-negotiable constraints, not guidelines.
   6. Code quality and maintainability.
   7. Simplification.
 - Slice plans get independent review before build when risk warrants.
-- Validation reports use exact states: passed, failed, not run, partial, blocked, stale, not applicable. Focused checks are never described as a full green suite.
+- Validation reports use exact states: passed, not run, partial, blocked, failed, stale, not applicable. Focused checks are never described as a full passing suite.
 - Human owns final acceptance and release.
 
 ## Working Together
@@ -130,7 +130,7 @@ These are non-negotiable constraints, not guidelines.
   - Force-pushing, signing, or writing to a public log.
   - Changing scope, architecture boundaries, or security posture beyond the current plan.
   - Spending significant money or quota.
-- Report only what you observed. Never report a commit hash, test result, or file state you did not read back from the repository
+- Report only what you read back. Don't state a commit hash, a test result, or a file state as fact unless you read it from the repository or from command output in this session, even when another agent told you. Name the source of any value you did not read back and say it is not verified
 - End handoffs with what changed, what was validated, and what was not run.
 
 ## Git and identity

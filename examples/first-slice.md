@@ -44,7 +44,7 @@ Acceptance:
 - One failed check returns failed.
 - One missing check returns incomplete.
 - Evidence for another revision returns incomplete.
-- Refresh preserves the same backend-owned result.
+- Refresh shows the same result, because the backend owns it.
 
 ## Builder pass
 
@@ -63,7 +63,7 @@ The reviewer checks:
 
 ## Red team
 
-Hostile fixtures (test inputs built to break the tool) include:
+Hostile fixtures (test inputs built to attack the product) include:
 
 - Duplicate check names.
 - Unknown status.
