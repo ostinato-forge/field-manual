@@ -18,6 +18,7 @@ import pathlib
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest import mock
 
@@ -237,6 +238,116 @@ class LinksTest(FixtureCase):
         self.write("a.md", md("# A", "", "Plain text."))
         self.assertInspectedNothing(self.check())
 
+    def test_section_references_after_a_manual_mention(self):
+        self.write("FIELD-MANUAL.md", md("# Manual", "", "## 5. Five", "", "## 7. Seven", "", "## 9. Nine",
+                                         "", "## 11. Eleven"))
+        self.write("METHOD.md", md(
+            "# Method",
+            "",
+            "Why: FIELD-MANUAL.md, sections 7 and 9.",
+            "",
+            "See FIELD-MANUAL.md, section 5 (build complete) and section 11 (stop).",
+            "",
+            "Also [FIELD-MANUAL.md](FIELD-MANUAL.md) section 7.",
+            "",
+            "And FIELD-MANUAL.md sections 5, 7, and 9.",
+        ))
+        self.assertPassed(self.check(), items=9)
+
+    def test_section_reference_problems(self):
+        self.write("FIELD-MANUAL.md", md("# Manual", "", "## 1. One", "", "## 2. Two"))
+        self.write("METHOD.md", md(
+            "# Method",
+            "",
+            "Read FIELD-MANUAL.md, sections 1 and 8.",
+            "",
+            "The manual, FIELD-MANUAL.md, explains it in",
+            "section 9 and more.",
+            "",
+            "FIELD-MANUAL.md and METHOD.md section 9 differ.",
+            "",
+            "A new paragraph names section 9.",
+            "- FIELD-MANUAL.md, section 1.",
+            "- A new list item names section 9.",
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 4)
+        self.assertEqual(result.problems, [
+            "METHOD.md:3: no section 8 in FIELD-MANUAL.md",
+            "METHOD.md:6: no section 9 in FIELD-MANUAL.md",
+        ])
+
+    def test_link_text_may_wrap_or_hold_brackets(self):
+        self.write("a.md", md("# A", "", "See [the long", "name](missing.md) here.", "Also [see [1]](gone.md)."))
+        result = self.check()
+        self.assertEqual(result.items, 2)
+        self.assertEqual(result.problems, [
+            "a.md:4: link target does not exist: missing.md",
+            "a.md:5: link target does not exist: gone.md",
+        ])
+
+    def test_angle_bracket_targets_and_titles(self):
+        self.write("file name.md", md("# File"))
+        self.write("b.md", md("# B"))
+        self.write("a.md", md(
+            "[a](<file name.md>)",
+            '[b](b.md "Title")',
+            "[c](b.md 'Title')",
+            '[d](<b.md#b> "Title")',
+        ))
+        self.assertPassed(self.check(), items=4)
+
+    def test_empty_target_fails(self):
+        self.write("a.md", md("# A", "", "[x]()", "[y](<>)"))
+        result = self.check()
+        self.assertEqual(result.items, 2)
+        self.assertEqual(result.problems, ["a.md:3: empty link target", "a.md:4: empty link target"])
+
+    def test_reference_definitions_are_links(self):
+        self.write("b.md", md("# B"))
+        self.write("a.md", md(
+            "# A",
+            "",
+            "[ok]: b.md#b",
+            "[bad]: missing.md",
+            '[web]: https://example.com "Title"',
+            "[frag]: #nope",
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 4)
+        self.assertEqual(result.problems, [
+            "a.md:4: link target does not exist: missing.md",
+            "a.md:6: no heading for fragment: #nope",
+        ])
+
+    def test_trailing_hash_run_is_stripped_before_the_slug(self):
+        self.write("a.md", md("## Notes ##", "", "[x](#notes)"))
+        self.assertPassed(self.check(), items=1)
+
+    def test_symbolic_link_out_of_the_root_is_outside(self):
+        repo = self.root / "repo"
+        self.write("out/x.md", md("# X"))
+        self.write("repo/a.md", md("[x](sub/x.md)", "[y](here.md#x)"))
+        os.symlink(self.root / "out", repo / "sub")
+        os.symlink(self.root / "out" / "x.md", repo / "here.md")
+        result = cm.CHECKS["links"](repo)
+        self.assertIsInstance(result, cm.Result, NOT_RUN_MESSAGE)
+        self.assertEqual(result.items, 2)
+        self.assertEqual(sorted(result.problems), [
+            "a.md:1: link target is outside the repository: sub/x.md",
+            "a.md:2: link target is outside the repository: here.md#x",
+            "here.md: symbolic link leaves the repository, not read",
+            "sub: symbolic link leaves the repository, not read",
+        ])
+
+    def test_root_given_through_a_symbolic_link(self):
+        self.write("repo/a.md", md("[x](b.md)"))
+        self.write("repo/b.md", md("# B"))
+        os.symlink(self.root / "repo", self.root / "alias")
+        result = cm.CHECKS["links"](self.root / "alias")
+        self.assertIsInstance(result, cm.Result, NOT_RUN_MESSAGE)
+        self.assertPassed(result, items=1)
+
 
 # 2. fences
 
@@ -287,6 +398,32 @@ class FencesTest(FixtureCase):
         self.write("a.md", md("# A", "", "Plain text."))
         self.assertInspectedNothing(self.check())
 
+    def test_backtick_in_the_info_string_does_not_open(self):
+        self.write("a.md", md("```a`b", "Text.", "```", "code", "```"))
+        self.assertPassed(self.check(), items=2)
+
+    def test_tilde_fences_open_and_close(self):
+        cases = {
+            "plain": md("~~~", "code", "~~~"),
+            "longer close": md("~~~", "code", "~~~~"),
+            "other fences inside": md("~~~~text", "~~~", "```", "~~~~"),
+            "backticks in the info string": md("~~~ a`b", "code", "~~~"),
+        }
+        for name, text in cases.items():
+            with self.subTest(name):
+                self.write("a.md", text)
+                self.assertPassed(self.check(), items=2)
+
+    def test_unclosed_tilde_fence_fails(self):
+        for text in (md("# A", "~~~text", "code"), md("# A", "~~~~", "code", "~~~"), md("# A", "~~~", "```")):
+            with self.subTest(text=text):
+                self.write("a.md", text)
+                self.assertOneProblem(self.check(), "a.md:2:", "never closed")
+
+    def test_markdown_tilde_block_needs_no_four_backticks(self):
+        self.write("a.md", md("~~~markdown", "```text", "inner", "```", "~~~"))
+        self.assertPassed(self.check(), items=2)
+
 
 # 3. punctuation
 
@@ -317,13 +454,14 @@ class PunctuationTest(FixtureCase):
 
     def test_doubled_hyphen_fails(self):
         for line in ("one -- two", "one --- two", "one--two", "one---two", "ends with --",
-                     "-- starts here"):
+                     "-- starts here", "ends with--", "word-- next", "**Note**--read", '"no"--then',
+                     "<!-- a note -->"):
             with self.subTest(line=line):
                 self.write("a.md", md("# A", line))
                 self.assertOneProblem(self.check(), "a.md:2:", "doubled hyphen")
 
     def test_hyphen_forms_that_pass(self):
-        for line in ("the --only flag", "-----", "well-known", "- - -", "<!-- a note -->"):
+        for line in ("the --only flag", "--flag at the line start", "-----", "well-known", "- - -"):
             with self.subTest(line=line):
                 self.write("a.md", md("# A", line))
                 self.assertPassed(self.check(), items=2)
@@ -359,6 +497,57 @@ class PunctuationTest(FixtureCase):
         self.write("a.md", md("```text", "only code", "```"))
         self.assertInspectedNothing(self.check())
 
+    def test_inside_of_a_tilde_fence_is_code(self):
+        self.write("a.md", md("# A", "~~~", "Bad\u2014here.", "~~~"))
+        self.assertPassed(self.check(), items=1)
+
+    def test_markdown_example_is_read_as_prose(self):
+        for info in ("markdown", "md", "Markdown starter"):
+            with self.subTest(info=info):
+                self.write("a.md", md(
+                    "# A",
+                    "",
+                    f"````{info}",
+                    "# Starter",
+                    "Bad\u2014here.",
+                    "```text",
+                    "one -- two",
+                    "```",
+                    "````",
+                    "",
+                    "```text",
+                    "Fine\u2014in code.",
+                    "```",
+                ))
+                result = self.check()
+                self.assertEqual(result.items, 3)
+                self.assertEqual(result.problems, ["a.md:5: forbidden character U+2014"])
+
+    def test_symbolic_links_that_leave_the_root_are_not_read(self):
+        repo = self.root / "repo"
+        self.write("out/bad.md", md("Bad\u2014here.", "```text"))
+        self.write("repo/a.md", md("Fine."))
+        os.symlink(self.root / "out" / "bad.md", repo / "link.md")
+        os.symlink(self.root / "out", repo / "dir")
+        for name in ("links", "fences", "punctuation", "terms"):
+            with self.subTest(check=name):
+                result = cm.CHECKS[name](repo)
+                self.assertIsInstance(result, cm.Result, NOT_RUN_MESSAGE)
+                self.assertHasProblem(result, "link.md: symbolic link leaves the repository, not read")
+                self.assertHasProblem(result, "dir: symbolic link leaves the repository, not read")
+                self.assertFalse([p for p in result.problems if "U+2014" in p or "never closed" in p],
+                                 result.problems)
+
+    def test_symbolic_links_inside_the_root(self):
+        self.write("a.md", md("Bad\u2014here."))
+        self.write("sub/b.md", md("Fine."))
+        os.symlink(self.root / "a.md", self.root / "alias.md")
+        os.symlink(self.root / "sub", self.root / "subalias")
+        result = self.check()
+        self.assertEqual(result.items, 3)
+        self.assertEqual(result.problems, ["a.md:1: forbidden character U+2014",
+                                           "alias.md:1: forbidden character U+2014"])
+
 
 # 4. sources
 
@@ -367,10 +556,11 @@ E2 = ('- **S2.** [Second](https://example.com/2) (2025, a journal). '
       'Supports sections 1 and 2, on things: "second quote". Read 2026-10.')
 
 
-def sources_manual(body, entries, after=()):
+def sources_manual(body, entries, after=(), between=()):
     """A manual with sections 1 and 2, a Sources section, and a License.
 
     The body starts at line 5. The first entry is at line len(body) + 15.
+    The lines in between sit after the "---" line and before "## License".
     """
     return md(
         "# Manual",
@@ -392,6 +582,7 @@ def sources_manual(body, entries, after=()):
         "",
         "---",
         "",
+        *between,
         "## License",
         "",
         *after,
@@ -418,6 +609,9 @@ class SourcesTest(FixtureCase):
             "no Read": '- **S3.** [Third](https://example.com/3) (2026-01). Supports section 1: "q".',
             "bad Read date": '- **S3.** [Third](https://example.com/3) (2026-01). Supports section 1: "q". Read November.',
             "Read month 13": '- **S3.** [Third](https://example.com/3) (2026-01). Supports section 1: "q". Read 2026-13.',
+            "Section in capitals": '- **S3.** [Third](https://example.com/3) (2026-01). Supports Section 1: "q". Read 2026-11.',
+            "section sign": '- **S3.** [Third](https://example.com/3) (2026-01). Supports §1: "q". Read 2026-11.',
+            "no section number": '- **S3.** [Third](https://example.com/3) (2026-01). Supports the method: "q". Read 2026-11.',
         }
         for name, entry in third.items():
             with self.subTest(name):
@@ -463,6 +657,35 @@ class SourcesTest(FixtureCase):
     def test_citation_below_sources_does_not_count(self):
         self.write("FIELD-MANUAL.md", sources_manual(["Claim (S1)."], [E1, E2], after=["See (S2)."]))
         self.assertOneProblem(self.check(), "S2", "never cited")
+
+    def test_supports_words_in_the_title_name_nothing(self):
+        entry = ('- **S2.** [Why Supports section 9 matters](https://example.com/2) (2026-01). '
+                 'Supports section 2: "q". Read 2026-11.')
+        self.write("FIELD-MANUAL.md", sources_manual(["Claim (S1, S2)."], [E1, entry]))
+        self.assertPassed(self.check(), items=3)
+
+    def test_malformed_citation_fails(self):
+        self.write("FIELD-MANUAL.md", sources_manual(
+            ["Claim (S1, S2).", "Bad (S1 and S2).", "Bad (S2; S1).", "Bad (see S1).", "Fine (stored in S3)."],
+            [E1, E2],
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 6)
+        self.assertEqual(result.problems, [
+            "FIELD-MANUAL.md:6: malformed citation (S1 and S2)",
+            "FIELD-MANUAL.md:7: malformed citation (S2; S1)",
+            "FIELD-MANUAL.md:8: malformed citation (see S1)",
+        ])
+
+    def test_sources_section_ends_at_a_rule_line(self):
+        self.write("FIELD-MANUAL.md", sources_manual(["Claim (S1, S2)."], [E1, E2],
+                                                     between=["- Not an entry.", ""]))
+        self.assertPassed(self.check(), items=3)
+
+    def test_entries_inside_code_are_ignored(self):
+        self.write("FIELD-MANUAL.md", sources_manual(
+            ["Claim (S1, S2)."], [E1, E2, "```text", "- **S9.** not an entry", "```"]))
+        self.assertPassed(self.check(), items=3)
 
     def test_no_sources_section_inspects_nothing(self):
         self.write("FIELD-MANUAL.md", md("# Manual", "", "## 1. One", "", "Text."))
@@ -568,6 +791,11 @@ class EvidenceTest(FixtureCase):
                 self.assertOneProblem(
                     self.check(), "FIELD-MANUAL.md:7:", '"Alpha"', f"tagged {tag}", "cites no source")
 
+    def test_citation_inside_a_code_span_does_not_count(self):
+        self.write("FIELD-MANUAL.md", evidence_manual(alpha_text="Alpha text `(S1)`."))
+        self.write_ledger(BETA_DATED, DELTA_UNDATED)
+        self.assertOneProblem(self.check(), "FIELD-MANUAL.md:7:", '"Alpha"', "cites no source")
+
     def test_incident_without_ledger_entry_fails(self):
         self.write("FIELD-MANUAL.md", evidence_manual())
         self.write_ledger(DELTA_UNDATED)
@@ -632,7 +860,8 @@ class LedgerTest(FixtureCase):
 
     def test_wrapped_field_continues_the_item(self):
         entry = self.first()
-        entry.insert(4, "  across two lines.")
+        entry[4] = "- Rule:"
+        entry.insert(5, "  Check first, across two lines.")
         self.write_ledger(entry, self.SECOND)
         self.assertPassed(self.check(), items=2)
 
@@ -686,6 +915,20 @@ class LedgerTest(FixtureCase):
                 result = self.check()
                 self.assertEqual(result.items, 2)
                 self.assertOneProblem(result, f"INCIDENTS.md:21: heading is not an entry: {heading}")
+
+    def test_heading_of_another_level_is_not_an_entry(self):
+        for heading in ("### I-09: Wrong level", "#### Notes", "###### I-09: Deep"):
+            with self.subTest(heading=heading):
+                self.write_ledger([heading, ""], self.first(), self.SECOND)
+                result = self.check()
+                self.assertEqual(result.items, 2)
+                text = heading.lstrip("#").strip()
+                self.assertOneProblem(result, f"INCIDENTS.md:5: heading is not an entry: {text}")
+
+    def test_headings_inside_code_are_ignored(self):
+        self.write_ledger(self.first(), self.SECOND,
+                          ["```text", "## Not an entry", "### Nor this", "- Note: not a field", "```", ""])
+        self.assertPassed(self.check(), items=2)
 
     def test_duplicate_identifier_fails(self):
         second = ledger_entry("I-01", "not recorded", 'FIELD-MANUAL.md, "Beta"')
@@ -753,9 +996,57 @@ class SharedListsTest(FixtureCase):
 
     def test_copy_with_one_item_fails(self):
         self.write("a.md", md("Use this order:", "", "- One.", "- Two."))
-        self.write("b.md", md("Check in this order:", "", "- One.", "", "- Two."))
+        self.write("b.md", md("Check in this order:", "", "- One.", "", "Then a paragraph."))
         table = self.two_copies({"file": "b.md", "kind": "list", "after": r"^Check in this order:"})
         self.assertOneProblem(self.check(table), "b.md", "fewer than two items")
+
+    def b_table(self):
+        return self.two_copies({"file": "b.md", "kind": "list", "after": r"^Check in this order:"})
+
+    def test_blank_line_between_items_does_not_end_the_list(self):
+        self.write("a.md", md("Use this order:", "", "- One.", "- Two."))
+        self.write("b.md", md("Check in this order:", "", "- One.", "", "- Two."))
+        self.assertPassed(self.check(self.b_table()), items=2)
+
+    def test_loose_list_is_read_in_full(self):
+        self.write("a.md", md("Use this order:", "", "- One.", "", "- Two.", "", "- Three."))
+        self.write("b.md", md("Check in this order:", "", "- One.", "- Two.", "- Three."))
+        self.assertPassed(self.check(self.b_table()), items=2)
+
+    def test_wrapped_and_lazy_lines_belong_to_the_item(self):
+        self.write("a.md", md("Use this order:", "", "- One thing", "  wrapped here.", "- Two", "lazily."))
+        self.write("b.md", md("Check in this order:", "", "- One thing wrapped here.", "- Two lazily."))
+        self.assertPassed(self.check(self.b_table()), items=2)
+
+    def test_drift_in_a_wrapped_line_fails(self):
+        self.write("a.md", md("Use this order:", "", "- One thing", "  wrapped here.", "- Two."))
+        self.write("b.md", md("Check in this order:", "", "- One thing", "  wrapped there.", "- Two."))
+        self.assertOneProblem(self.check(self.b_table()), "b.md", "item 1", "wrapped there.", "wrapped here.")
+
+    def test_drift_in_a_nested_item_fails(self):
+        self.write("a.md", md("Use this order:", "", "- Stop before:", "  - Deleting data.", "  - Publishing.",
+                              "- Two."))
+        self.write("b.md", md("Check in this order:", "", "- Stop before:", "  - Deleting data.", "  - Pushing.",
+                              "- Two."))
+        self.assertOneProblem(self.check(self.b_table()), "b.md", "item 1", "Pushing.", "Publishing.")
+
+    def test_list_ends_where_the_rules_say(self):
+        self.write("a.md", md("Use this order:", "", "- One.", "- Two."))
+        endings = {
+            "paragraph after a blank line": ["", "After.", "- Three."],
+            "heading": ["## Next", "- Three."],
+            "fence": ["```text", "- Three.", "```"],
+            "item left of the indent": None,
+        }
+        for name, tail in endings.items():
+            with self.subTest(name):
+                if tail is None:
+                    self.write("b.md", md("- Check in this order:", "  - One.", "  - Two.", "- Three."))
+                    table = self.two_copies({"file": "b.md", "kind": "list", "after": r"^- Check in this order:"})
+                else:
+                    self.write("b.md", md("Check in this order:", "", "- One.", "- Two.", *tail))
+                    table = self.b_table()
+                self.assertPassed(self.check(table), items=2)
 
     def test_replace_substitutes_before_comparing(self):
         self.write("a.md", md("Use this order:", "", "1. The user.", "2. The project guide, then code."))
@@ -821,6 +1112,13 @@ class SharedListsTest(FixtureCase):
         self.write("b.md", md("## The rules", "", "1. Keep one plan, always.", "2. Ship the slice."))
         self.assertOneProblem(self.check(self.rules_table()), "b.md", "item 2", "Ship the slice.")
 
+    def test_startswith_needs_a_word_end_after_the_prefix(self):
+        self.write_rule_headings()
+        self.write("b.md", md("## The rules", "", "1. Keep one planet.", "2. Prove the slice first."))
+        self.assertOneProblem(self.check(self.rules_table()), "b.md", "item 1", "Keep one planet.")
+        self.write("b.md", md("## The rules", "", "1. Keep one plan.", "2. Prove the slice"))
+        self.assertPassed(self.check(self.rules_table()), items=2)
+
     def test_headings_without_section_fails(self):
         self.write("a.md", md("## 2. Before", "### One", "### Two"))
         self.write("b.md", md("## The rules", "", "1. One.", "2. Two."))
@@ -870,10 +1168,43 @@ class TermsTest(FixtureCase):
 
     def test_operating_terms_fail(self):
         for line in ("Write an operating manual.", "The Operating Guide.", "OPERATING MANUAL",
-                     "A starter operating-manual template.", "The Operating-Guide."):
+                     "A starter operating-manual template.", "The Operating-Guide.",
+                     "Write an operating   manual.", "Two operating manuals.", "Operating guides help."):
             with self.subTest(line=line):
                 self.write("a.md", md("# A", line))
                 self.assertOneProblem(self.check(), "a.md:2:", "operating")
+
+    def test_operating_term_across_two_lines_fails_at_the_first(self):
+        self.write("a.md", md("# A", "", "Write an operating", "manual here."))
+        result = self.check()
+        self.assertEqual(result.items, 3)
+        self.assertEqual(result.problems, ['a.md:3: banned term "operating manual"'])
+
+    def test_operating_forms_that_pass(self):
+        self.write("a.md", md(
+            "# A",
+            "",
+            "Follow the operating guidelines.",
+            "",
+            "The last word is operating",
+            "",
+            "manual work starts a new paragraph.",
+        ))
+        self.assertPassed(self.check(), items=4)
+
+    def test_markdown_example_is_read_as_prose(self):
+        self.write("a.md", md(
+            "# A",
+            "````markdown",
+            "An assistant helps.",
+            "```text",
+            "assistant",
+            "```",
+            "````",
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 2)
+        self.assertEqual(result.problems, ['a.md:3: banned term "assistant"'])
 
     def test_assistant_fails(self):
         for line in ("An assistant helps.", "Assistants help.", "[assistant](x.md) here."):
@@ -975,6 +1306,50 @@ class GlanceTest(FixtureCase):
         ))
         self.assertPassed(self.check(), items=1)
 
+    def test_section_12_ends_at_a_rule_line(self):
+        self.write("FIELD-MANUAL.md", md(
+            "## 1. One",
+            "### Alpha",
+            "## 12. Glance",
+            "- [ ] Do alpha ([Alpha](#alpha))",
+            "",
+            "---",
+            "",
+            "- [ ] Outside item without a link",
+            "",
+            "## Worked Example",
+        ))
+        self.assertPassed(self.check(), items=1)
+
+    def test_checkboxes_inside_code_are_ignored(self):
+        self.write("FIELD-MANUAL.md", glance_manual(
+            "- [ ] Do alpha ([Alpha](#alpha))", "```text", "- [ ] code item", "```"))
+        self.assertPassed(self.check(), items=1)
+
+    def test_any_list_marker_and_checked_boxes_count(self):
+        self.write("FIELD-MANUAL.md", glance_manual(
+            "* [ ] Do alpha ([Alpha](#alpha))",
+            "+ [x] Do beta ([Beta](#beta))",
+            "1. [X] Do alpha again ([Alpha](#alpha))",
+            "2) [ ] Do nothing",
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 4)
+        self.assertOneProblem(result, "FIELD-MANUAL.md:14:", "no [text](#fragment) link")
+
+    def test_link_on_a_continuation_line_counts(self):
+        self.write("FIELD-MANUAL.md", glance_manual(
+            "- [ ] Do alpha, which takes",
+            "  long words, see [Alpha](#alpha)",
+            "- [ ] Do beta, see",
+            "[Beta](#beta).",
+            "- [ ] Do it",
+            "  ([x](#nope))",
+        ))
+        result = self.check()
+        self.assertEqual(result.items, 3)
+        self.assertOneProblem(result, "FIELD-MANUAL.md:15:", "#nope")
+
     def test_no_section_12_inspects_nothing(self):
         self.write("FIELD-MANUAL.md", md("## 1. One", "### Alpha"))
         self.assertInspectedNothing(self.check())
@@ -1047,6 +1422,24 @@ class VersionTest(FixtureCase):
         self.assertOneProblem(
             result, "AGENT-CONTRACT.md:3: relative link breaks when the contract is copied: METHOD.md")
 
+    def test_version_line_inside_a_fence_is_not_a_version_line(self):
+        self.write("FIELD-MANUAL.md", md("# Manual", "", "*Version v2.0, 2026-11.*", "",
+                                         "```text", "*Version v9.9, 2026-11.*", "```"))
+        self.write_contract()
+        self.assertPassed(self.check(), items=2)
+
+    def test_links_inside_code_are_ignored(self):
+        self.write("FIELD-MANUAL.md", md("*Version v2.0, 2026-11.*"))
+        self.write("AGENT-CONTRACT.md", md(
+            "# Contract",
+            "[a](https://github.com/o/r/blob/v2.0/METHOD.md)",
+            "Code `[b](METHOD.md)` here.",
+            "```text",
+            "[c](https://github.com/o/r/blob/main/METHOD.md) [d](METHOD.md)",
+            "```",
+        ))
+        self.assertPassed(self.check(), items=1)
+
     def test_contract_without_versioned_links_inspects_nothing(self):
         self.write("FIELD-MANUAL.md", md("*Version v2.0, 2026-11.*"))
         self.write("AGENT-CONTRACT.md", md("# Contract", "", "See [a page](https://example.com/page)."))
@@ -1055,6 +1448,68 @@ class VersionTest(FixtureCase):
     def test_missing_contract_inspects_nothing(self):
         self.write("FIELD-MANUAL.md", md("*Version v2.0, 2026-11.*"))
         self.assertInspectedNothing(self.check())
+
+
+# Reading files
+
+
+class ReadingTest(FixtureCase):
+    def write_bytes(self, rel: str, data: bytes) -> None:
+        path = self.root / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+
+    def test_file_that_is_not_utf8_is_a_problem_for_every_check(self):
+        for name in ("FIELD-MANUAL.md", "AGENT-CONTRACT.md", "INCIDENTS.md"):
+            self.write_bytes(name, b"# Bad \xff here\n")
+        self.write("ok.md", md("Use this order:", "", "- One.", "- Two."))
+        table = {"order": [
+            {"file": "FIELD-MANUAL.md", "kind": "list", "after": r"^Use this order:"},
+            {"file": "ok.md", "kind": "list", "after": r"^Use this order:"},
+        ]}
+        for name in CHECK_ORDER:
+            with self.subTest(check=name):
+                args = (table,) if name == "shared-lists" else ()
+                result = cm.CHECKS[name](self.root, *args)
+                self.assertIsInstance(result, cm.Result, NOT_RUN_MESSAGE)
+                expected = "INCIDENTS.md" if name == "ledger" else "FIELD-MANUAL.md"
+                found = [p for p in result.problems if p.startswith(f"{expected}: cannot read: ")]
+                self.assertEqual(len(found), 1, result.problems)
+
+    def test_other_files_are_still_read(self):
+        self.write_bytes("bad.md", b"Bad \xff here\n")
+        self.write("ok.md", md("Bad\u2014here."))
+        result = cm.CHECKS["punctuation"](self.root)
+        self.assertEqual(result.items, 1)
+        self.assertEqual(len(result.problems), 2, result.problems)
+        self.assertTrue(result.problems[0].startswith("bad.md: cannot read: "), result.problems)
+        self.assertEqual(result.problems[1], "ok.md:1: forbidden character U+2014")
+
+    def test_broken_symbolic_link_is_a_problem(self):
+        self.write("a.md", md("Fine."))
+        os.symlink(self.root / "nowhere.md", self.root / "broken.md")
+        for name in ("links", "fences", "punctuation", "terms"):
+            with self.subTest(check=name):
+                result = cm.CHECKS[name](self.root)
+                self.assertHasProblem(result, "broken.md: cannot read: ")
+
+    def test_unreadable_file_fails_the_check_and_is_not_a_usage_error(self):
+        self.write_bytes("bad.md", b"Bad \xff here\n")
+        self.write("ok.md", md("Fine."))
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            status = cm.main(["--root", str(self.root), "--only", "punctuation"])
+        self.assertEqual(status, 1)
+        self.assertIn("  bad.md: cannot read: ", out.getvalue())
+
+    def test_only_an_unknown_name_reaches_the_usage_error(self):
+        def broken(root, *args):
+            raise ValueError("a bug in a check")
+
+        with mock.patch.dict(cm.CHECKS, {"links": broken}):
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(ValueError):
+                    cm.main(["--root", str(self.root), "--only", "links"])
 
 
 # Command line
@@ -1118,6 +1573,29 @@ class RunTest(FixtureCase):
             self.assertEqual(cm.run(self.root, require_all=True)[1], 0)
             self.assertEqual(cm.run(self.root, only=["links"])[1], 0)
             self.assertEqual(cm.run(self.root, only=["links"], require_all=True)[1], 1)
+
+    def test_long_lines_take_linear_time(self):
+        shapes = {
+            "brackets then targets": "[" * 25000 + "](" * 12500,
+            "empty links": "[](" * 16700,
+            "heading of brackets": "# " + "[" * 25000 + "](" * 12500,
+            "heading with a long space run": "# x" + " " * 50000 + "y",
+            "many agents": "agent " * 8300 + "assistant",
+            "many quotes": "Supports section 1" + ': "' * 16600,
+            "many file names": "FIELD-MANUAL.md section 1 " + ".md" * 16600,
+            "many backticks": "`` a ` " * 7000,
+        }
+        for name, line in shapes.items():
+            with self.subTest(name):
+                text = md("## 1. One", "", line, "", "## Sources", "", "- **S1.** [T](https://e.example) (x). " + line)
+                for rel in ("FIELD-MANUAL.md", "AGENT-CONTRACT.md", "INCIDENTS.md", "a.md"):
+                    self.write(rel, text)
+                # A quadratic pattern takes minutes on these inputs. Linear
+                # code takes a few seconds. The bound is loose so that a
+                # slow machine does not fail the test.
+                start = time.monotonic()
+                cm.run(self.root)
+                self.assertLess(time.monotonic() - start, 30.0)
 
     def test_exit_status_from_real_checks(self):
         self.write("a.md", md("```text", "x", "```"))
@@ -1214,13 +1692,45 @@ class MovedTest(FixtureCase):
         self.git("commit", "-q", "-m", "change")
         return self.git("rev-parse", "HEAD")
 
-    def moved(self, *extra):
+    def moved(self, *extra, root=None):
         out, err = io.StringIO(), io.StringIO()
         head = self.git("rev-parse", "HEAD")
-        argv = ["moved", self.base, head, "--root", str(self.root), *extra]
+        argv = ["moved", self.base, head, "--root", str(root or self.root), *extra]
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             status = cm.main(argv)
+        self.err = err.getvalue()
         return status, out.getvalue().splitlines()
+
+    def test_files_under_dot_directories_are_skipped(self):
+        self.write(".remember/notes.md", md("Session notes."))
+        self.write("sub/.cache/x.md", md("Cached."))
+        self.commit()
+        status, lines = self.moved()
+        self.assertEqual(status, 0)
+        self.assertEqual(lines, ["added: 0", "removed: 0", "unchanged: 5"])
+
+    def test_comparing_nothing_exits_2(self):
+        status, lines = self.moved("--", "nomatch.md")
+        self.assertEqual(status, 2)
+        self.assertEqual(lines, [])
+        self.assertIn("moved: compared nothing", self.err)
+
+    def test_root_may_be_a_subdirectory(self):
+        self.write("docs/x.md", md("Doc one.", "", "Doc two."))
+        self.base = self.commit()
+        self.write("docs/x.md", md("Doc two.", "", "Doc three."))
+        self.write("a.md", md("Changed outside the root."))
+        self.commit()
+        status, lines = self.moved(root=self.root / "docs")
+        self.assertEqual(status, 0, self.err)
+        self.assertEqual(lines, ["added: 1", "removed: 1", "unchanged: 1", "+ x.md: Doc three.", "- x.md: Doc one."])
+
+    def test_listed_under_the_file_whose_count_changed(self):
+        self.write("b.md", BASE_B + "\nFirst paragraph here.\n")
+        self.commit()
+        status, lines = self.moved()
+        self.assertEqual(status, 0)
+        self.assertEqual(lines, ["added: 1", "removed: 0", "unchanged: 5", "+ b.md: First paragraph here."])
 
     def test_paragraph_moved_within_a_file_is_unchanged(self):
         self.write("a.md", md("# Title", "", "Second paragraph spans", "two   lines.", "", "First paragraph here."))
