@@ -620,8 +620,6 @@ The cycle: **build** (agent implements a slice) → **self-test** (agent runs te
 
 When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked: nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks. Don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
 
-Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
-
 ### Verify the builder's report against the repository
 
 *Evidence: incident.*
@@ -713,6 +711,12 @@ These came from incidents in the author's projects where the cost was counted. T
 - **Load the minimum.** The architect loads the project guide, the one current plan, the current packet, and the files that packet touches. Everything else is loaded on demand. Progressive disclosure is cheaper than a full context on every turn.
 - **Spend capability where a second pair of eyes changes the outcome.** Mechanical, fully specified work goes to a cheaper model behind strong tests. The most capable model goes to design and review (see [Two-stage review, and match the model to the task](#two-stage-review-and-match-the-model-to-the-task)).
 - **Cap concurrency at what you can review and what the machine can run.** Builders that finish faster than you can verify them produce unreviewed work, which is the most expensive kind.
+
+### Route each task class by measured pass rate
+
+*Evidence: observed.*
+
+Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
 
 ### Honest cost reporting
 
