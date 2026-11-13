@@ -92,7 +92,7 @@ Prove one complete journey before adding many features, integrations, backends, 
 
 ### Sequence work, keep the bar
 
-Why: [Build complete, not fast](FIELD-MANUAL.md#build-complete-not-fast), [Silent scope reduction](FIELD-MANUAL.md#silent-scope-reduction), and [Recommending on effort, not merit](FIELD-MANUAL.md#recommending-on-effort-not-merit).
+Why: [Build complete, not fast](FIELD-MANUAL.md#build-complete-not-fast) and [Scope reduction, unstated or argued from effort](FIELD-MANUAL.md#scope-reduction-unstated-or-argued-from-effort).
 
 Order capabilities and build them one at a time, each complete to the product's quality bar. Deferring a whole capability is healthy sequencing. Thinning every capability to look finished produces a product that demos well and fails in use.
 
@@ -540,7 +540,7 @@ Do not claim savings until accepted outcomes, review burden, failures, runtime, 
 
 ## 20. Common failure modes
 
-Most are described, with the incident behind them where one exists, in FIELD-MANUAL.md, sections 8 and 11.
+FIELD-MANUAL.md describes most of these beside the practice each one breaks, with the incident behind it where one exists. Section 11 of the manual collects the anti-patterns that belong to no single practice.
 
 - One large prompt for a complex system.
 - Builder self-approval.

@@ -17,7 +17,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-06
 - What happened: During a build, the agent justified a recommendation by effort: the smaller, faster option. The owner rejected it. They stopped and agreed on the rule: build each capability to the bar, sequence a separable capability for later if needed, and never cut scope to save effort. They also named the phrases that signal the problem, such as "land green" and "least code". The rule went into the agent's standing guidance for every project. Two days later the owner had to restate it once.
 - Rule: When a correction is about how you build, stop and agree on the principle, then write it down.
-- Supports: FIELD-MANUAL.md, "Sync the operating model when it drifts" and "Recommending on effort, not merit"
+- Supports: FIELD-MANUAL.md, "Sync the operating model when it drifts" and "Scope reduction, unstated or argued from effort"
 - Record: private session notes
 
 ## I-03: The reviews that hunted false-clear states
@@ -129,7 +129,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-09
 - What happened: One builder's efficiency monitor reported zero interventions in its seven-day report. The detectors were not quiet. A settings problem had left the plugin's hooks disabled, and two components were writing to different databases. Zero looked exactly like success.
 - Rule: A tool that reports on quality must also report when it could not observe anything.
-- Supports: FIELD-MANUAL.md, "Absence of evidence never renders as success" and "Reading silence as success"
+- Supports: FIELD-MANUAL.md, "Absence of evidence never renders as success"
 - Record: private session notes
 
 ## I-17: Documentation taken as behavior
@@ -137,7 +137,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-10
 - What happened: A project wrote a section of operational cautions about a library. The cautions came from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test environment did not behave that way, and the library needed no change. The section was deleted.
 - Rule: A documentation page proves what a source says. A belief about how a dependency behaves is a hypothesis until something probes it.
-- Supports: FIELD-MANUAL.md, "Match proof to the claim"
+- Supports: FIELD-MANUAL.md, "Check your fakes against the real dependency"
 - Record: private session notes
 
 ## I-18: The script that changed what it never named

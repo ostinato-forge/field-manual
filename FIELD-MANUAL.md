@@ -226,7 +226,7 @@ The sharpest friction is usually an unspoken mismatch about *how you build*: wha
 
 Independent sources converge here. Osmani's first lesson is "Start with a clear plan (specs before code)" (S9), and Anthropic's harness research reached the same point from the failure side.
 
-That research found that an agent given only a high-level prompt tends to attempt to "one-shot" the whole application and falls short. Given a feature list to work through, it makes incremental progress (S2).
+That research found that an agent given only a high-level prompt tends to attempt to "one-shot" the whole application and falls short. Given a feature list to work through, it makes incremental progress (S2). The same failure comes from your side when you ask for an entire feature, page, or system in one request. Break the work into steps small enough to verify before the next one (see [Small, verifiable steps](#small-verifiable-steps)).
 
 A spec doesn't need to be long. It needs to answer:
 
@@ -353,7 +353,7 @@ Not every line needs the same scrutiny. Calibrate your review to the risk:
 
 The calibration should shift over a project's lifetime: tight review early (while patterns are being established) → relaxed in the middle (patterns are proven) → tight again when entering new territory.
 
-The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect.
+The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect. Saying "looks good" to a summary is rubber-stamping. It gets harder to avoid as you trust the agent more, which is when it matters most: the agent is most likely to introduce a subtle bug in an area you have stopped reviewing closely because "it always gets this right."
 
 ### Show, don't tell
 
@@ -391,9 +391,13 @@ The agent can always re-read a file. It can't always recall a decision from 50 m
 
 The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One team had to record a set of decisions on a shared document. A check showed that the export for the downstream guide strips comment markup, that a comment can be resolved and hidden, and that a PDF for stakeholders would carry none of them, so the decisions went into the body. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
 
+A third form is the real-time message. Broker messages, chat pings, terminal logs, and status updates are useful coordination signals. They wake people up and keep work moving. They are not the source of truth. Important outcomes (task ownership, review decisions, approval, rejected findings, scope changes, blocked state, final completion) belong in durable artifacts: task files, PRs, issues, reviews, commits, or progress docs. If a stale message and the repository disagree, trust the repository and correct the durable record.
+
 ---
 
 ## 7. Quality and Verification
+
+The practices in this section run in five groups: states and coverage, who evaluates, what counts as proof, tests that can fail, and the unchanged set.
 
 ### Absence of evidence never renders as success
 
@@ -412,6 +416,8 @@ The repository uses three sets of state words. Each describes a different thing.
 | Proof level | One claim | open, implemented, proved, live validated, stale |
 
 When an agent reports a validation run, three result states use reporting names: passed for verified, not run for unknown, and partial for incomplete. The other four keep their names. "Stale" appears in two sets, result and proof level, and means the same in both: the evidence is older than the source.
+
+Zero findings, zero interventions, zero failures: before you celebrate, ask whether the detector ran. A monitor whose hooks are disabled, a test suite that discovered no tests, and a linter pointed at an empty directory all report clean.
 
 This applies to your own tooling too. One builder's efficiency monitor reported zero interventions in a seven-day report, because a settings problem had disabled the plugin's hooks and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
@@ -470,9 +476,7 @@ Use the strongest practical proof for the claim being made:
 
 For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests support it), live validated (the real path was exercised and the result supports the claim), or stale (the source changed after the evidence was recorded).
 
-A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
-
-If the proof is weaker than the prose, weaken the prose. Honest "not yet" sections are better than confident claims the product cannot defend.
+Agents are good at making product language sound complete. The README, the launch post, or the architecture document then claims what you intended to build, while the code proves a narrower slice. Keep claim boundaries explicit: say what is proved, what is implemented but unproved, what is live validated, and what is not built yet. If the proof is weaker than the prose, weaken the prose. An honest "not yet" section is better than a confident claim the product cannot defend.
 
 ### Live verification is the definition of done
 
@@ -496,7 +500,11 @@ This matters more with agents than without. Agents write tests that pass. Some o
 
 A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
 
-One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
+One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge.
+
+Documentation is the same kind of belief. A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong.
+
+The rule for both: a belief about a dependency's runtime behavior is a hypothesis until something probes it. Before a fake counts as proof, check its behavior with a live probe of the real dependency at the version in use. Where you cannot probe, check it against the dependency's documentation, and record that the weaker check is the one you used.
 
 ### Prove the unchanged set
 
@@ -614,7 +622,7 @@ As projects grow, you'll use multiple agents: a builder, a reviewer, parallel in
 
 The cycle: **build** (agent implements a slice) → **self-test** (agent runs tests) → **review** (different agent or human reviews the diff against the spec) → **human stop** (you decide whether to continue).
 
-### Two-stage review, and match the model to the task
+### Two-stage review
 
 *Evidence: observed.*
 
@@ -678,16 +686,6 @@ Multiple agents investigating different hypotheses simultaneously (debugging, re
 
 Use parallelism freely for divergent work (investigation). For implementation, run builders in parallel only when each has its own files and its own worktree, and stay inside the concurrency cap above.
 
-### Real-time messages are not durable state
-
-*Evidence: observed.*
-
-Broker messages, chat pings, terminal logs, and status updates are useful coordination signals. They wake people up and keep work moving. They are not the source of truth.
-
-Important outcomes (task ownership, review decisions, approval, rejected findings, scope changes, blocked state, final completion) belong in durable artifacts: task files, PRs, issues, reviews, commits, or progress docs.
-
-If a stale message and the repo disagree, trust the repo and correct the durable record.
-
 ---
 
 ## 10. Cost
@@ -700,6 +698,8 @@ The only cost that matters is the total cost to a verified and accepted result. 
 
 Apply the measure to every efficiency decision. Does a shorter brief lower total cost, or does it move the cost into review? Does skipping the second reviewer save tokens, or does it ship the defect the second reviewer would have caught? If you cannot answer with evidence, you do not yet know whether the change is efficient.
 
+One opinion, labeled as one: the agent earns its cost on synthesis, implementation, investigation, and transformation, the kinds of work where processing many things at once changes the outcome. Where the line falls depends on what your own attention costs.
+
 ### Rules that came from numbers
 
 *Evidence: observed, incident.*
@@ -709,7 +709,7 @@ These came from incidents in the author's projects where the cost was counted. T
 - **Fresh context per batch.** A long-lived builder's history is loaded on every turn. On the one build where this was counted, the history reached roughly 425,000 tokens and the builder's reports degraded (see [Fresh context per batch, bounded review cadence](#fresh-context-per-batch-bounded-review-cadence)).
 - **No fan-out without a cost estimate.** A multi-agent review workflow spends tokens in every agent it starts. In the author's projects, such workflows often found less than one careful reviewer with a narrow scope. Launch one when you can say what it will find that a single reviewer would not, and what it will cost.
 - **Load the minimum.** The architect loads the project guide, the one current plan, the current packet, and the files that packet touches. Everything else is loaded on demand. Progressive disclosure is cheaper than a full context on every turn.
-- **Spend capability where a second pair of eyes changes the outcome.** Mechanical, fully specified work goes to a cheaper model behind strong tests. The most capable model goes to design and review (see [Two-stage review, and match the model to the task](#two-stage-review-and-match-the-model-to-the-task)).
+- **Spend capability where a second pair of eyes changes the outcome.** Mechanical, fully specified work goes to a cheaper model behind strong tests. The most capable model goes to design and review (see [Route each task class by measured pass rate](#route-each-task-class-by-measured-pass-rate)).
 - **Cap concurrency at what you can review and what the machine can run.** Builders that finish faster than you can verify them produce unreviewed work, which is the most expensive kind.
 
 ### Route each task class by measured pass rate
@@ -728,7 +728,7 @@ A tool or a report that claims an intervention saved money must show the compari
 
 ## 11. Anti-Patterns
 
-These are specific failure modes observed across many projects. Each one is tempting, common, and expensive.
+These are specific failure modes observed across many projects. Each one is tempting, common, and expensive. A failure mode that is the reverse of one practice is described with that practice in the sections above.
 
 ### The "just fix it" instinct
 
@@ -738,57 +738,21 @@ When something breaks, the instinct is to tell the agent "fix this error." The a
 
 **Instead:** investigate why it broke. Have the agent explain the error, trace the cause, and propose a fix that addresses the root. This takes a little longer and removes the cause.
 
-### Rubber-stamping
-
-*Evidence: observed.*
-
-Reading the agent's summary of what it did and saying "looks good." The summary describes intent. The code describes reality. Always read the diff.
-
-This gets harder as you trust the agent more, which is when it matters most. The agent is most likely to introduce subtle bugs in areas you've stopped closely reviewing because "it always gets this right."
-
-### One-shotting complex work
-
-*Evidence: researched.*
-
-Asking the agent to build an entire feature, page, or system in one request. Anthropic's research documented this failure mode explicitly: agents given high-level prompts try to one-shot and produce incomplete results (S2).
-
-**Instead:** break work into steps. Each step should be small enough to verify before moving to the next.
-
-### Narrating instead of doing
-
-*Evidence: observed.*
-
-"I'm going to read the file, then I'll check the tests, then I'll look at the configuration..." The agent (or you) spending time describing what will be done instead of doing it. Bias toward action.
-
-### Suggesting easier alternatives when things get hard
-
-*Evidence: observed.*
-
-When the agent hits infrastructure friction (a test that's hard to write, a configuration that's complex, a dependency that's difficult), it may suggest skipping it or doing something simpler. Often the hard thing is the right thing. Push through.
-
-### Silent scope reduction
-
-*Evidence: observed.*
-
-Cutting features, removing edge cases, or simplifying requirements without explicitly acknowledging the reduction. Deferral is fine. Silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
-
-### Recommending on effort, not merit
+### Scope reduction, unstated or argued from effort
 
 *Evidence: observed, incident.*
 
-Related to silent scope reduction, but about the *justification*: the agent (or you) steers toward the smaller or faster option and dresses it as discipline: "let's just get it green," "this is less code," "the more finishable version." Effort and size are real considerations, but they are not *merits*. A recommendation should stand on correctness, the product's actual bar, and genuine risk (not on being easier). When the words "land it green," "least code," or "more finishable" are carrying the argument, that's the smell: re-justify on merit, and if you are deferring scope, defer it openly.
+Scope shrinks in two ways that are easy to miss.
+
+**Unstated.** Features are cut, edge cases are removed, or requirements are simplified, and nobody says so. Deferral is fine. Silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
+
+**Argued from effort.** The agent (or you) steers toward the smaller or faster option and presents it as discipline: "let's just get it green," "this is less code," "the more finishable version." The same thing happens at a hard spot. A test is hard to write, a configuration is complex, or a dependency is difficult, and the suggestion is to skip it or to do something simpler. Effort and size are real considerations, but they are not merits. A recommendation should stand on correctness, the product's actual bar, and genuine risk. When effort is carrying the argument, re-justify on merit. If you are deferring scope, defer it openly. Often the hard thing is the right thing.
 
 ### Over-engineering for hypothetical futures
 
 *Evidence: observed.*
 
 Building abstractions, helpers, or frameworks for requirements that don't exist yet. Three similar lines of code is better than a premature abstraction. The right amount of complexity is what the task actually requires, not what it might someday need.
-
-### Spending the agent on the wrong kind of work
-
-*Evidence: observed.*
-
-The agent's leverage is in synthesis (processing many files), implementation (generating code), investigation (tracing through a codebase), and transformation (refactoring). These are the tasks where processing many things at once changes the outcome rather than the typing speed. Work that does not need any of that is not where the tool pays for itself. Where exactly the line falls depends on what your own attention costs, so treat it as a judgment call rather than a rule.
 
 ### Not establishing patterns early
 
@@ -809,20 +773,6 @@ The flip side: when the agent pushes back with generic caution ("are you sure yo
 *Evidence: observed.*
 
 When a gate was skipped, a reviewer timed out, or the bar slipped, the honest response is to name it, restore the gate, and continue. The dishonest response is prose that describes the recovery in the past tense while the gate is still down. Agents are good at the second one, and so are tired humans. If the log says "re-verified", the re-verification must exist.
-
-### Reading silence as success
-
-*Evidence: observed, incident.*
-
-Zero findings, zero interventions, zero failures. Before celebrating, ask whether the detector ran. A monitor whose hooks are disabled, a test suite that discovered no tests, a linter pointed at an empty directory: all of them report clean. See [Absence of evidence never renders as success](#absence-of-evidence-never-renders-as-success).
-
-### Letting claims outrun proof
-
-*Evidence: observed.*
-
-Agents are good at making product language sound complete. That creates a subtle failure mode: the README, launch post, or architecture doc claims the thing you intended to build, while the code only proves a narrower slice.
-
-**Instead:** keep claim boundaries explicit. Say what is proved, what is implemented but unproved, what is live-validated, and what is still not yet. A smaller honest claim beats a larger theatrical one.
 
 ---
 
@@ -911,7 +861,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 **Spec before code (§4).** The chosen slice got a short design doc (what it does, which files, how to verify, what it explicitly does not do), reviewed and approved before any implementation.
 
-**The build, via subagents (§5, §9).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents: spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
+**The build, via subagents (§5, §9, §10).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents: spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
 
 **What the whole-change review caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Every per-task review was already separate from its builder (see [Builder/reviewer separation](#builderreviewer-separation)), and each one passed. The review of the whole change is what found it.
 
@@ -935,7 +885,7 @@ Each entry names the section it supports, a short quote from the page, and the m
 
 ### Research
 - **S1.** [Anthropic: Agentic coding and persistent returns to expertise](https://www.anthropic.com/research/claude-code-expertise) (2026-06). Supports section 1, "You're the architect. The agent is the builder.": "domain expertise, and not coding proficiency, amplifies effective use of the tool". Read 2026-11.
-- **S2.** [Anthropic: Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) (2025-11). Supports sections 2, 4, 5, 8, 9, and 11 on commits, specifications, small steps, session continuity, multiple agents, and one-shotting: "the agent tended to try to do too much at once". Read 2026-11.
+- **S2.** [Anthropic: Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) (2025-11). Supports sections 2, 4, 5, 8, and 9 on commits, specifications and one-shotting, small steps, session continuity, and multiple agents: "the agent tended to try to do too much at once". Read 2026-11.
 - **S3.** [Anthropic: Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps) (2026-03). Supports section 5, "TDD works better with agents, not worse"; section 7, "Separate who builds from who evaluates"; and section 9, "Builder/reviewer separation": "agents tend to respond by confidently praising the work". Read 2026-11.
 - **S4.** [Tornhill and Borg: Code Red: The Business Impact of Code Quality](https://arxiv.org/abs/2203.04374) (2022, International Conference on Technical Debt). Supports section 7, "Automated gates are force multipliers": "low quality code contains 15 times more defects than high quality code". Read 2026-11.
 - **S5.** [Borg, Hagatulah, Tornhill, and Söderberg: Code for Machines, Not Just Humans](https://arxiv.org/html/2601.02200v1) (2026, accepted for FORGE 2026). Supports section 7, "Automated gates are force multipliers": "LLMs tasked with refactoring have significantly lower break rates on code in the Healthy CodeHealth range". Read 2026-11.
