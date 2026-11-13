@@ -14,7 +14,8 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `CHECKLISTS.md` - checkpoint checklists for the method.
 - `PRACTICE-LIFECYCLE.md` - how techniques enter and leave guidance.
 - `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names.
-- `templates/` - fill-in artifacts. `examples/` - a worked slice and anonymized lessons.
+- `INCIDENTS.md` - the incident ledger. One entry per real event, with the practices it supports.
+- `templates/` - fill-in artifacts. `examples/` - a worked slice.
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.
 - `CLAUDE.md` - one line that imports this file, so Claude Code loads it even when another `CLAUDE.md` sits above the repository.
 - `scripts/check_manual.py` - checks the repository against its own rules. `scripts/test_check_manual.py` - its unit tests. Python 3, standard library only.
@@ -24,6 +25,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 
 - A practice with its evidence and the reason it works: `FIELD-MANUAL.md`.
 - A step, an order, a list to run through: `METHOD.md` or `CHECKLISTS.md`. State it once; link to the manual for the why. Do not restate the manual's reasoning in the method or the reasoning's steps in the manual.
+- An incident: one entry in `INCIDENTS.md`, with the month, what happened, the rule, the practices it supports, and what kind of record exists. The manual keeps one or two sentences of it.
 - A fill-in artifact: `templates/`. The manual never carries templates.
 - A rule an assistant must follow on any project: `AGENT-CONTRACT.md`. A rule for editing this repo: this file.
 - A rule a script can check: a check in `scripts/check_manual.py`, with a unit test that fails without it.
@@ -43,14 +45,21 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 
 ## Evidence Bar
 
-Practices should meet at least one of these bars:
+Practices should meet at least one of these bars. The word in code is the tag used in the practice's evidence line.
 
-- Independently converged by multiple practitioners.
-- Empirically researched with data.
-- Repeatedly observed across real projects.
-- Recorded as a dated incident on a real project, with the rule it produced.
+- Independently converged: two or more independent sources describe it (`converged`).
+- Empirically researched: a study, or an engineering report of experiments, supports it (`researched`).
+- Repeatedly observed across real projects (`observed`).
+- Recorded as an incident on a real project, with the rule it produced, in `INCIDENTS.md` (`incident`, or `incident (undated)` when no dated record exists).
 
-A practice that meets a bar still enters through the review in `PRACTICE-LIFECYCLE.md`: candidate, reviewed, trial where the claim is testable, then promotion by a human. The bar says what counts as evidence; the lifecycle says how it is checked.
+Every practice heading in sections 1 to 11 of `FIELD-MANUAL.md` carries an evidence line. A `researched` or `converged` practice cites its sources in its own text. An `incident` practice is named by a ledger entry.
+
+How a practice enters:
+
+- A practice from a single incident enters on the owner's decision. It is tagged `incident`, and its ledger entry is its record.
+- Any other practice enters through the review in `PRACTICE-LIFECYCLE.md`. A practice card and a trial are required only when the practice claims a measured effect, such as cost or speed. A human promotes it.
+
+The bar says what counts as evidence; the lifecycle says how it is checked.
 
 When adding sources, prefer primary sources, practitioner posts with concrete workflows, or project artifacts that show the practice in use. Avoid generic listicles.
 

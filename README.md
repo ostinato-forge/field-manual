@@ -31,7 +31,8 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 | [PRACTICE-LIFECYCLE.md](PRACTICE-LIFECYCLE.md) | How a new technique earns its way into guidance, and how it leaves. |
 | [CAPABILITY-STACK.md](CAPABILITY-STACK.md) | The capabilities a serious build tends to need, an adoption ladder, and trust boundaries. |
 | [templates/](templates) | Product direction, rule ledger, product brief, specification, architecture decision, current plan, work packet, review record, claims proof matrix, practice card, direction close, handoff. |
-| [examples/](examples) | A first product slice end to end, and lessons from real projects with the rule each one proved. |
+| [INCIDENTS.md](INCIDENTS.md) | The incident ledger: real events behind the practices, each with its month and the rule it produced. |
+| [examples/](examples) | A first product slice end to end. |
 | [AGENTS.md](AGENTS.md) | The maintainer contract for editing this repository. |
 
 ## The two rules everything else serves

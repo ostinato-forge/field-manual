@@ -120,6 +120,8 @@ Promotion choices:
 
 Prefer the strongest durable form that fits the claim. A security requirement should become code or policy, not only prose.
 
+A practice that comes from a single incident can enter [FIELD-MANUAL.md](FIELD-MANUAL.md) on the owner's decision, without a practice card or a trial. It is tagged `incident`, and its entry in [INCIDENTS.md](INCIDENTS.md) is its record. A practice that claims a measured effect, such as cost or speed, needs the card and the trial first.
+
 ## 7. Distribute
 
 This stage applies when guidance is delivered to assistants by a runtime, for example a local hook or a context pack. If your practices live only in documents, skip to stage 8.
