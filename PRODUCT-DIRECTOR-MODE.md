@@ -9,6 +9,10 @@ In this file, "agent" means the AI assistant you hand it to.
 This file is complete on its own. Its linked templates are optional. When they
 are unavailable, create equivalent records from the fields defined here.
 
+Evidence: this mode comes from the author's own product work. It is an observed
+practice. No study or comparison supports it. The practices behind it carry
+evidence tags in section 3 of [FIELD-MANUAL.md](FIELD-MANUAL.md).
+
 ## Purpose
 
 Product Director mode keeps the human focused on product judgment. The human

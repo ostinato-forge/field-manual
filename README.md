@@ -43,7 +43,7 @@ Absence of evidence must never render as success.
 
 ## Who this is for
 
-A software engineer or product builder, at any level, working with AI coding agents to build software that other people will use. Agent-agnostic and stack-agnostic.
+One accountable human (a software engineer or product builder, at any level) working with any number of AI coding agents to build software that other people will use. Agent-agnostic and stack-agnostic.
 
 ## Evidence base
 

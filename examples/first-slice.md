@@ -2,7 +2,7 @@
 
 ## Situation
 
-A team wants an agent to build a web tool that reads a deployment record and tells an operator whether a release is safe to promote.
+A builder wants an agent to build a web tool that reads a deployment record and tells an operator whether a release is safe to promote.
 
 ## Product decision
 

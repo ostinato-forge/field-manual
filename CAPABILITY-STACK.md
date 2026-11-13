@@ -6,6 +6,12 @@ The method does not require a specific agent or tool. This file names the capabi
 
 Add a tool only when it solves a measured problem. Every added layer has installation, context, security, maintenance, and failure cost.
 
+## Evidence
+
+This file is design guidance drawn from the author's own projects. No study or comparison supports the order of the layers. Levels 3 and 4 of the adoption ladder are design guidance with no measured outcome behind them yet.
+
+One disclosure: the author maintains `agent-efficiency`, an open-source tool for the layer "Local guidance and efficiency observation". This file describes the capability. Any tool that does the same job fits.
+
 ## The stack
 
 ```text

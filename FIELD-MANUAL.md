@@ -10,9 +10,9 @@ This is a field manual for software engineers who build real products with AI co
 
 These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
 
-**Who this is for:** A software engineer (any level) working with one or more AI coding agents to build software that other people will use. "Solo builder" means you're the human. You might have multiple agents, but you're the one with the vision, the taste, and the accountability.
+**Who this is for:** One accountable human working with any number of AI coding agents to build software that other people will use. You may be a software engineer at any level or a product builder. "Solo builder" means you are that human. However many agents do the work, you are the one with the vision, the taste, and the accountability.
 
-**Who this is not for:** Teams building AI agents themselves, managers evaluating AI tools, or people looking for a specific tool tutorial.
+**Who this is not for:** People whose product is itself an AI agent, managers evaluating AI tools, or people looking for a specific tool tutorial.
 
 In this repository, "agent" means an AI coding assistant: a model that reads the repository, runs commands, and changes files under your direction. The "project guide" is the file that tells the agent how to work in one codebase, such as `CLAUDE.md` or `AGENTS.md`.
 
@@ -409,7 +409,7 @@ If something important is decided (an architectural approach, a naming conventio
 
 The agent can always re-read a file. It can't always recall a decision from 50 messages ago, especially across session boundaries. If a decision matters tomorrow, write it down today.
 
-The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One team had to record a set of decisions on a shared document. A check showed that the export for the downstream guide strips comment markup, that a comment can be resolved and hidden, and that a PDF for stakeholders would carry none of them, so the decisions went into the body. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
+The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One project had to record a set of decisions on a shared document. A check showed that the export for the downstream guide strips comment markup, that a comment can be resolved and hidden, and that a PDF for stakeholders would carry none of them, so the decisions went into the body. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
 
 A third form is the real-time message. Broker messages, chat pings, terminal logs, and status updates are useful coordination signals. They wake people up and keep work moving. They are not the source of truth. Important outcomes (task ownership, review decisions, approval, rejected findings, scope changes, blocked state, final completion) belong in durable artifacts: task files, PRs, issues, reviews, commits, or progress docs. If a stale message and the repository disagree, trust the repository and correct the durable record.
 
@@ -520,7 +520,7 @@ This matters more with agents than without. Agents write tests that pass. Some o
 
 A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
 
-One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge.
+One project's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge.
 
 Documentation is the same kind of belief. A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong.
 
