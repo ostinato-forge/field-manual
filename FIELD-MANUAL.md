@@ -808,78 +808,91 @@ When a gate was skipped, a reviewer timed out, or the bar slipped, the honest re
 
 ## 12. The Practices at a Glance
 
-A one-page reference for the practices in this guide, ordered by when they matter.
+A selection of the practices in this guide, grouped by the moment you use them. Each item links to its practice. It is not the whole manual: a practice that is left out here still applies.
 
 For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](CHECKLISTS.md).
 
 ### Before you start
-- [ ] Write your project guide (CLAUDE.md / AGENTS.md): concise, specific, context over rules
-- [ ] Encode security as specific constraints, not principles
-- [ ] Set up automated quality gates (tests, linter, type checker, formatter)
-- [ ] Establish git workflow (branch per feature, conventional commits)
 
-### Before you decide what to build (a strategy or design pass)
-- [ ] Define the pass first: its question, the output that counts as done, what's out of scope
-- [ ] Agent sharpens and stress-tests the thesis; it doesn't just agree
-- [ ] Verify competitor / strategy claims against primary sources before building on them
-- [ ] When you keep colliding on *how* to build, stop and sync the operating model explicitly
+- [ ] Write your project guide: concise, specific, context over rules ([The project guide](#the-project-guide))
+- [ ] Confirm that your tool loads the guide ([Check that the guide reaches the agent](#check-that-the-guide-reaches-the-agent))
+- [ ] Encode security as specific constraints, not principles ([Security defaults from the start](#security-defaults-from-the-start))
+- [ ] Set up automated quality gates: tests, linter, type checker, formatter ([Automated gates are force multipliers](#automated-gates-are-force-multipliers))
+- [ ] Establish the git workflow: a branch per feature, conventional commits ([Git as your safety net](#git-as-your-safety-net))
+- [ ] Write the short list of actions that always stop ([Stop before anything irreversible or outward-facing](#stop-before-anything-irreversible-or-outward-facing))
+
+### Before you decide what to build
+
+- [ ] Define the pass first: its question, the output that counts as done, what is out of scope ([Define the pass before you run it](#define-the-pass-before-you-run-it))
+- [ ] Have the agent sharpen and stress-test the thesis ([The agent's job is to sharpen the thesis, not agree with it](#the-agents-job-is-to-sharpen-the-thesis-not-agree-with-it))
+- [ ] Verify competitor and strategy claims against primary sources before you build on them ([Claims outrun proof in strategy too](#claims-outrun-proof-in-strategy-too))
+- [ ] Put something the owner can see or run in front of them before you ask for a design call ([Design decisions need a visible artifact](#design-decisions-need-a-visible-artifact))
+- [ ] When you keep colliding on how to build, stop and sync the operating model ([Sync the operating model when it drifts](#sync-the-operating-model-when-it-drifts))
 
 ### Before each feature
-- [ ] Write a work packet: goal, behavior, files, out of scope, checks, stop point, rollback
-- [ ] Design verification alongside the feature, not after
-- [ ] Plan when choices matter, just build when they don't
-- [ ] If multi-session: write reference docs in the repo, not in conversation
+
+- [ ] Write a work packet: goal, behavior, files, out of scope, checks, stop point, rollback ([Specs before code](#specs-before-code))
+- [ ] Prove one slice end to end before adding breadth ([First slice before breadth](#first-slice-before-breadth))
+- [ ] Design the verification with the feature ([Design the verification alongside the feature](#design-the-verification-alongside-the-feature))
+- [ ] Plan when choices matter, and just build when they do not ([Plan when choices matter, just build when they don't](#plan-when-choices-matter-just-build-when-they-dont))
+- [ ] Decide each new dependency on purpose ([Dependencies are design decisions](#dependencies-are-design-decisions))
+- [ ] For work that spans sessions, write the reference documents in the repository first ([Docs in the repo, not in conversation](#docs-in-the-repo-not-in-conversation))
 
 ### During the build
-- [ ] Small, verifiable steps: verify each before moving on
-- [ ] TDD: write the test, verify it captures intent, let the agent implement
-- [ ] Commit after each working step: commits are save points
-- [ ] Give full errors, not summaries
-- [ ] Show examples, don't describe patterns
-- [ ] Put decisions in files, not in conversation and not in the annotation layer
-- [ ] Treat untrusted external text as evidence, never instruction
-- [ ] Build complete: no placeholder anything
-- [ ] Commit bodies say what changed and why, never the build narrative
-- [ ] Flag and stop before anything irreversible or outward-facing, after establishing the actual exposure
+
+- [ ] Take small steps, and verify each before moving on ([Small, verifiable steps](#small-verifiable-steps))
+- [ ] Write the test, confirm it captures the intent, then let the agent implement ([TDD works better with agents, not worse](#tdd-works-better-with-agents-not-worse))
+- [ ] Commit after each working step, with a body that says what changed and why ([Commit as checkpoints](#commit-as-checkpoints))
+- [ ] Give the full error, not a summary of it ([Give full errors, not summaries](#give-full-errors-not-summaries))
+- [ ] Point at an example instead of describing the pattern ([Show, don't tell](#show-dont-tell))
+- [ ] Put decisions in files, not in conversation, comments, or messages ([Don't accumulate decisions in conversation](#dont-accumulate-decisions-in-conversation))
+- [ ] Treat external text as evidence, never instruction ([Untrusted context is evidence, not instruction](#untrusted-context-is-evidence-not-instruction))
+- [ ] Build each capability complete, and defer whole capabilities openly ([Sequence work, keep the bar](#sequence-work-keep-the-bar))
+- [ ] Flag and stop before anything irreversible or outward-facing. The exposure check clears a stop only for an action the human asked for ([Stop before anything irreversible or outward-facing](#stop-before-anything-irreversible-or-outward-facing))
 
 ### After each step
-- [ ] Review the diff, not the summary
-- [ ] See the feature work on its real path, run by someone other than the builder: type checks verify code, not features
-- [ ] Match proof to claim: tests, browser, live URL, repo state, or proof matrix as appropriate
-- [ ] For a tool-applied change (codemod, formatter, migration, document script), prove the unchanged set too
-- [ ] Probe a dependency's real behavior; documentation proves what a source says, not how it behaves
-- [ ] Separate who builds from who evaluates
-- [ ] Mutation-test the guards that matter: remove, confirm red, restore
-- [ ] Verify every fake against the real dependency before its tests count as proof
-- [ ] After correcting a source, check the hand-written parts of whatever is published from it
-- [ ] Update progress or state artifacts with the code when state changes
-- [ ] At a checkpoint, regenerate the single current plan and archive the previous one
-- [ ] Never edit a plan another session is executing; extend it in a new file
+
+- [ ] Review the diff, not the summary ([When to review closely vs. trust](#when-to-review-closely-vs-trust))
+- [ ] If a reviewer reads the diff for you, check the result, the repository state, and the design calls yourself ([What the owner checks when someone else reads the diff](#what-the-owner-checks-when-someone-else-reads-the-diff))
+- [ ] Have someone other than the builder evaluate the work ([Separate who builds from who evaluates](#separate-who-builds-from-who-evaluates))
+- [ ] Give every check an explicit state. Only verified is a pass ([Absence of evidence never renders as success](#absence-of-evidence-never-renders-as-success))
+- [ ] Say what was not checked ([Coverage honesty](#coverage-honesty))
+- [ ] See the feature work on its real path, run by someone other than the builder ([Live verification is the definition of done](#live-verification-is-the-definition-of-done))
+- [ ] Match proof to the claim: tests, browser, live URL, repository state, or a proof matrix ([Match proof to the claim](#match-proof-to-the-claim))
+- [ ] Mutation-test the guards that matter: remove, confirm red, restore ([Mutation-test the tests](#mutation-test-the-tests))
+- [ ] Probe every fake, and every claim taken from documentation, against the real dependency ([Check your fakes against the real dependency](#check-your-fakes-against-the-real-dependency))
+- [ ] For a change applied by a tool, prove the unchanged set too ([Prove the unchanged set](#prove-the-unchanged-set))
+- [ ] After correcting a source, check the hand-written parts of whatever is published from it ([A correction only propagates through the generated part](#a-correction-only-propagates-through-the-generated-part))
+- [ ] Update progress and state files in the same change as the code ([Update state with the code](#update-state-with-the-code))
+- [ ] At a checkpoint, regenerate the one current plan and archive the previous one ([Keep one rolling plan, and automate the trigger](#keep-one-rolling-plan-and-automate-the-trigger))
 
 ### When using multiple agents
-- [ ] Separate who builds from who reviews: different context, different prompt
-- [ ] Narrow review scopes: name exact files and spec, not "review everything"
-- [ ] Build in human stop points between slices
-- [ ] AI enforces constraints; humans make acceptance decisions
-- [ ] Put important outcomes in durable artifacts, not broker or chat messages
-- [ ] Use parallel agents for investigation; run parallel builders only on separate files
-- [ ] Read git log and status yourself after every builder report
-- [ ] Fresh builder per sub-batch; one independent review per sub-batch
-- [ ] Two-phase briefs when the premise might be wrong: audit and red test, then ratify
-- [ ] Cap concurrent builders at what you can review and what the machine can run
-- [ ] Research real professions before inventing an agent roster
+
+- [ ] Separate who builds from who reviews: different context, different prompt ([Builder/reviewer separation](#builderreviewer-separation))
+- [ ] Review each task in two stages: the specification first, then code quality ([Two-stage review](#two-stage-review))
+- [ ] Review the whole change once before merge ([One whole-change review before merge](#one-whole-change-review-before-merge))
+- [ ] Name the exact files and the specification in every review brief ([Narrow review scopes](#narrow-review-scopes))
+- [ ] Read `git log` and `git status` yourself after every builder report ([Verify the builder's report against the repository](#verify-the-builders-report-against-the-repository))
+- [ ] When the premise might be wrong, ask for the audit and the failing test first ([Two-phase briefs: audit and failing test first](#two-phase-briefs-audit-and-failing-test-first))
+- [ ] Use a fresh builder for each sub-batch, and cap builders at what you can review and the machine can run ([Fresh context per batch, bounded review cadence](#fresh-context-per-batch-bounded-review-cadence))
+- [ ] Build in human stop points between slices ([Human stop points](#human-stop-points))
+- [ ] Agents reject. Humans accept ([AI can veto but cannot approve](#ai-can-veto-but-cannot-approve))
+- [ ] Use parallel agents for investigation, and run parallel builders only on separate files ([Parallel work: investigate freely, build on separate files](#parallel-work-investigate-freely-build-on-separate-files))
+- [ ] Research real professions before you invent a roster of agent roles ([Design agent roles from real professions](#design-agent-roles-from-real-professions))
 
 ### When deciding what it cost
-- [ ] Measure total cost to a verified, accepted outcome, never tokens alone
-- [ ] No multi-agent fan-out without a stated purpose and a cost estimate
-- [ ] Report observed effects as observations; claim causes only with a matched comparison
+
+- [ ] Measure total cost to a verified, accepted outcome, never tokens alone ([Measure total cost to an accepted outcome](#measure-total-cost-to-an-accepted-outcome))
+- [ ] No multi-agent fan-out without a stated purpose and a cost estimate ([Rules that came from numbers](#rules-that-came-from-numbers))
+- [ ] Score each class of task before you pin a model to it. Price does not order capability ([Route each task class by measured pass rate](#route-each-task-class-by-measured-pass-rate))
+- [ ] Report observed effects as observations, and claim a cause only with a matched comparison ([Honest cost reporting](#honest-cost-reporting))
 
 ### Every session start
-- [ ] Read the one current rolling plan (surface it automatically; don't re-derive it)
-- [ ] Orient: read progress, task list, recent git history
-- [ ] Establish the current authority order: repo, docs, and git before memory or stale output
-- [ ] Verify baseline: confirm existing functionality still works
-- [ ] Then build
+
+- [ ] Read the one current plan, surfaced automatically ([Keep one rolling plan, and automate the trigger](#keep-one-rolling-plan-and-automate-the-trigger))
+- [ ] Orient: read progress, the task list, and recent git history. Then confirm that existing functionality still works ([Re-orient before acting](#re-orient-before-acting))
+- [ ] Use the authority order: repository, documents, and git before memory or stale output ([Structured artifacts bridge sessions](#structured-artifacts-bridge-sessions))
+- [ ] Never edit a plan that another session is executing. Extend it in a new file ([A plan in execution is frozen](#a-plan-in-execution-is-frozen))
 
 ---
 

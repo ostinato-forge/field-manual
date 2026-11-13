@@ -1,6 +1,6 @@
 # Checklists
 
-Checkpoint checklists for the steps in [METHOD.md](METHOD.md). The one-page summary of the practices themselves is the last numbered section of [FIELD-MANUAL.md](FIELD-MANUAL.md).
+Checkpoint checklists for the steps in [METHOD.md](METHOD.md). A selection of the practices themselves, grouped by the moment you use them, is the last numbered section of [FIELD-MANUAL.md](FIELD-MANUAL.md).
 
 ## Session start
 
