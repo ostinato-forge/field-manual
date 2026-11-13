@@ -616,7 +616,7 @@ The stop is the point. On its first use on one project, a two-phase brief reveal
 
 *Evidence: incident.*
 
-Long-lived builder sessions degrade. Context fills with history, instructions thin, and the agent's reports drift from the repository. One builder kept alive across four fix rounds reached roughly 425,000 tokens of history and misreported its commits twice, while the reviewer spent roughly 563,000 tokens across four re-reviews.
+A long-lived builder session can degrade: context fills with history, instructions thin, and the agent's reports drift from the repository. One builder kept alive across four fix rounds reached roughly 425,000 tokens of history and misreported its commits twice, while the reviewer spent roughly 563,000 tokens across four re-reviews. Those numbers come from one build with no comparison run. They record what happened on that build, and no saving has been measured.
 
 The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at the lower of two limits: what you can review as the work comes back, and what the machine can run, since builds and test suites compete for cores. On one eight-core workstation the limit was two.
 
@@ -694,10 +694,10 @@ Apply the measure to every efficiency decision. Does a shorter brief lower total
 
 *Evidence: observed, incident.*
 
-These came from measured incidents rather than principle, and they generalize:
+These came from incidents in the author's projects where the cost was counted. They are observations. None rests on a matched comparison, so none is a measured saving (see [Honest cost reporting](#honest-cost-reporting)):
 
-- **Fresh context per batch.** A long-lived builder is more expensive than a new one, because its history is loaded on every turn and its reports degrade (§9).
-- **No fan-out without a cost estimate.** Multi-agent review workflows cost a great deal and often find less than one careful reviewer with a narrow scope. Launch them when you can say what they will find that a single reviewer would not, and what they will cost.
+- **Fresh context per batch.** A long-lived builder's history is loaded on every turn. On the one build where this was counted, the history reached roughly 425,000 tokens and the builder's reports degraded (§9).
+- **No fan-out without a cost estimate.** A multi-agent review workflow spends tokens in every agent it starts. In the author's projects, such workflows often found less than one careful reviewer with a narrow scope. Launch one when you can say what it will find that a single reviewer would not, and what it will cost.
 - **Load the minimum.** The architect loads the project guide, the one current plan, the current packet, and the files that packet touches. Everything else is loaded on demand. Progressive disclosure is cheaper than a full context on every turn.
 - **Spend capability where a second pair of eyes changes the outcome.** Mechanical, fully specified work goes to a cheaper model behind strong tests. The most capable model goes to design and review (§9).
 - **Cap concurrency at what you can review and what the machine can run.** Builders that finish faster than you can verify them produce unreviewed work, which is the most expensive kind.
