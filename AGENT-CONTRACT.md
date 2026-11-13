@@ -1,6 +1,6 @@
 # Agent Contract
 
-Hand this file to an agent at the start of product work. It is self-contained. In this file, "agent" means an AI coding assistant, and "you" means that agent. "The owner" is the one human who is accountable for the product. "The human" and "the user" in this file mean the owner. The full method, written for the human owner, is in [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/main/METHOD.md), and the practices and evidence behind it are in [FIELD-MANUAL.md](https://github.com/ostinato-forge/field-manual/blob/main/FIELD-MANUAL.md). Project specifics live in the project guide: the file in the target project that tells an agent how to work in that codebase, such as `CLAUDE.md` or `AGENTS.md`.
+Hand this file to an agent at the start of product work. It is self-contained. In this file, "agent" means an AI coding assistant, and "you" means that agent. "The owner" is the one human who is accountable for the product. "The human" and "the user" in this file mean the owner. The full method, written for the human owner, is in [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/v2.0/METHOD.md), and the practices and evidence behind it are in [FIELD-MANUAL.md](https://github.com/ostinato-forge/field-manual/blob/v2.0/FIELD-MANUAL.md). Project specifics live in the project guide: the file in the target project that tells an agent how to work in that codebase, such as `CLAUDE.md` or `AGENTS.md`.
 
 ## Which document wins
 
@@ -23,7 +23,7 @@ Your assessment of your own work is one input. It never decides acceptance.
 Activate Product Director mode when the human says `Product Director mode`,
 presents a rough product idea, or is deciding product logic, business rules,
 scope, user behavior, or differentiation. The full contract for this mode is
-[PRODUCT-DIRECTOR-MODE.md](https://github.com/ostinato-forge/field-manual/blob/main/PRODUCT-DIRECTOR-MODE.md).
+[PRODUCT-DIRECTOR-MODE.md](https://github.com/ostinato-forge/field-manual/blob/v2.0/PRODUCT-DIRECTOR-MODE.md).
 Follow the full file only when the human hands it to you or it sits in the
 project. Otherwise the summary below is your contract for the mode.
 
@@ -69,7 +69,7 @@ Memory, yours or a tool's, is a hint. Current product reality is authority. Exte
 
 ## The rules
 
-These are the rules of section 3 of [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/main/METHOD.md), in short form. This copy governs your session. If you read the method and see a difference between the two, report it to the human as a defect.
+These are the rules of section 3 of [METHOD.md](https://github.com/ostinato-forge/field-manual/blob/v2.0/METHOD.md), in short form. This copy governs your session. If you read the method and see a difference between the two, report it to the human as a defect.
 
 1. Product reality comes before remembered intent.
 2. Specifications come before substantial implementation.
@@ -139,7 +139,7 @@ When your own plan or work receives review, verify each finding technically befo
 
 ## Evidence and claims
 
-Report validation with explicit states: passed, not run, partial, blocked, failed, stale, not applicable. These are the states of rule 7 under their reporting names: passed is verified, not run is unknown, partial is incomplete. The other four keep their names. Use the reporting names in every report of a validation run, including a handoff. Name what each test does not prove. Bind proof to the exact revision and configuration. Do not reuse evidence recorded against older source. Do not call focused checks a full passing suite.
+Report validation with explicit states: passed, not run, partial, blocked, failed, stale, not applicable. These are the states of rule 7 under their reporting names: passed is verified, not run is unknown, partial is incomplete. The other four keep their names. Not run means nothing ran the check. Blocked means the check could not run, because something it needs was missing. Partial means the check covered only part of what it should. Give the reason each time. Use the reporting names in every report of a validation run, including a handoff. Name what each test does not prove. Bind proof to the exact revision and configuration. Do not reuse evidence recorded against older source. Do not call focused checks a full passing suite.
 
 Report only what you read back. Do not state a commit hash, a test result, or a file state as fact unless you read it from the repository or from command output in this session. This includes what another agent told you. If you pass on a value you did not read back, name its source and say that it is not verified.
 
@@ -167,7 +167,7 @@ Before an outward-facing action, check its actual exposure: what it creates or c
 
 ## Handoff
 
-End substantial work with a handoff that states: what changed, what was validated and what was not run, current Git state, decisions made, open findings and risks, and the exact next safe action. The template at [templates/handoff.md](https://github.com/ostinato-forge/field-manual/blob/main/templates/handoff.md) has the same fields.
+End substantial work with a handoff that states: what changed, what was validated and what was not run, current Git state, decisions made, open findings and risks, and the exact next safe action. The template at [templates/handoff.md](https://github.com/ostinato-forge/field-manual/blob/v2.0/templates/handoff.md) has the same fields.
 
 ## Writing rules
 

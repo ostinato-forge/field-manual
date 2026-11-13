@@ -1,7 +1,8 @@
 # CLAUDE.md Starter Template
 
-Copy this file to your project root as `CLAUDE.md` (or `AGENTS.md` for multi-tool
-compatibility). Fill in the bracketed sections. Delete the comments. Keep it under
+Copy the template in the code block below to your project root as `CLAUDE.md` (or
+`AGENTS.md` for multi-tool compatibility). Fill in every bracketed part, and write
+"none yet" where something does not exist yet. Delete the bracketed instructions. Keep it under
 200 lines. Noise dilutes signal. Other tool-specific instruction files should point
 at this one rather than create a second source of truth.
 
@@ -89,7 +90,7 @@ tests/        - mirrors src/ structure
 
 These are non-negotiable constraints, not guidelines.
 
-[Two lines below are Python: `shell=True` and `yaml.safe_load()`. Replace those two with the equivalents for your stack and keep the rest. Then delete this line.]
+[Two lines below are Python: `shell=True` and `yaml.safe_load()`. Replace those two with the equivalents for your stack and keep the rest, including rules that do not apply yet. Add the rules your own product needs. Then delete this line.]
 
 - Never hardcode secrets; use environment variables or secret management
 - Always validate user input at system boundaries

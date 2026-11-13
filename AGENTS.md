@@ -82,7 +82,7 @@ Before finishing edits:
 
 - Read the changed section in context.
 - Run `python3 -m unittest scripts/test_check_manual.py` from the repository root. It must pass.
-- Run `python3 scripts/check_manual.py`. It prints one line for each of its ten checks. CI requires the checks named after `--only` in `.github/workflows/check.yml`, and each of those must print `passed`. A check that is not named there does not pass yet, because the documents do not meet its rule. A change must not add a new problem to any check's output.
+- Run `python3 scripts/check_manual.py --require-all`. It prints one line for each of its ten checks, and each must print `passed`. CI runs the same command. A change must not add a new problem to any check's output.
 - Open every outside link you added or changed. The checker does not fetch web pages.
 - Check heading numbering and duplicate headings.
 - Confirm the starter template still matches the manual's guidance.

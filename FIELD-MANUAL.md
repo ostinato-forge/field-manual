@@ -4,7 +4,7 @@ Practical engineering with AI coding agents, grounded in evidence.
 
 ## What This Is
 
-*Last updated 2026-11-13.*
+*Version v2.0, 2026-11.*
 
 This is a field manual for people who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and the author's own projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
 
@@ -112,7 +112,7 @@ Leave out:
 
 A guide in the repository is not a guide in the agent's context. Tools differ in which file names they load, and a file in a parent directory can change what loads below it. One repository kept its rules in `AGENTS.md`. A `CLAUDE.md` in a directory above it made the coding tool skip that file at session start. Sessions worked in the repository without its rules, and nothing reported the gap.
 
-Check once for each tool, and again when the layout changes. Start a fresh session with tools turned off and ask the agent to quote a line that appears only in the guide. If it cannot, the guide is not loaded. The fix depends on the tool: a setting, a different file name, or a one-line file that imports the guide.
+Check once for each tool, and again when the layout changes. Start a fresh session with tools turned off and ask the agent to quote a line that appears only in the guide. If it cannot, the guide is not loaded. Some tools can also list the instruction files they loaded, which is a faster check. The fix depends on the tool: a setting, a different file name, or a one-line file that imports the guide.
 
 ### Security defaults from the start
 
@@ -425,7 +425,7 @@ The practices in this section run in five groups: states and coverage, who evalu
 
 This is the one sentence the rest of this section depends on. An agent asked whether its work is done will say yes. A tool whose detector did not run will report zero findings. A check that was skipped produces the same silence as a check that passed. In every case the honest state is "unknown", and unknown must never display as green.
 
-Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the source), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
+Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete (the check covered only part of what it should), blocked (the check could not run, because something it needs was missing), failed, stale (the evidence is older than the source), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
 
 The repository uses three sets of state words. Each describes a different thing.
 

@@ -12,9 +12,9 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 
 ## The first hour
 
-1. Copy [STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md) into your project and fill in the environment, conventions, and security sections.
-2. Write a one-page [product brief](templates/product-brief.md).
-3. Write one [work packet](templates/work-packet.md) for the first complete slice.
+1. Copy the template inside [STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md) into your project and fill in every bracketed part. Choose your stack first: the repository does not choose it for you.
+2. Write a short [product brief](templates/product-brief.md). If the idea is still rough, use [PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md) first.
+3. Write one [work packet](templates/work-packet.md) for the first complete slice. For a first slice this small, the packet stands in for the specification and the plan, so write "none yet" in those two fields. The method's [suggested file layout](METHOD.md#suggested-file-layout) says where the brief and the packet go.
 4. Run the [build loop](METHOD.md#11-build-the-slice) in the method: failing test, implement, gates, diff, commit, stop for review.
 5. Read [Quality and Verification](FIELD-MANUAL.md#7-quality-and-verification) in the manual before you call anything done.
 
