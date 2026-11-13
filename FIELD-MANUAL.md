@@ -106,6 +106,14 @@ Leave out:
 
 **Context over rules.** "Always use semicolons" is a rule. "This project uses ESLint with the Airbnb config; semicolons are required" is context. Context helps the agent make judgment calls about cases you didn't anticipate. Rules only cover the exact cases you thought of.
 
+### Check that the guide reaches the agent
+
+*Evidence: incident.*
+
+A guide in the repository is not a guide in the agent's context. Tools differ in which file names they load, and a file in a parent directory can change what loads below it. One repository kept its rules in `AGENTS.md`. A `CLAUDE.md` in a directory above it made the coding tool skip that file at session start. Sessions worked in the repository without its rules, and nothing reported the gap.
+
+Check once for each tool, and again when the layout changes. Start a fresh session with tools turned off and ask the agent to quote a line that appears only in the guide. If it cannot, the guide is not loaded. The fix depends on the tool: a setting, a different file name, or a one-line file that imports the guide.
+
 ### Security defaults from the start
 
 *Evidence: observed.*
@@ -296,15 +304,15 @@ This works better with agents for a specific reason: **the test is an unambiguou
 
 Write tests that verify **behavior**, not implementation details. Tests written to hit a coverage number are paperwork. Tests that describe what the system should do from the outside are specifications.
 
-### Build complete, not fast
+### Sequence work, keep the bar
 
-*Evidence: observed.*
+*Evidence: observed, incident.*
 
-When requirements come from real experience (months of validation, caught bugs, proven workflows), they are the spec. Build them complete.
+There are two ways to make a build smaller, and only one of them is safe. Sequencing moves a whole capability to later and builds it fully when its turn comes. Thinning builds a weaker version of a capability now, without the error handling, the edge cases, or the tests. A thinned capability looks finished and is not. "We'll polish it later" is a fiction, because the polish phase never arrives.
 
-The anti-pattern: agents (and some methodologies) will suggest trimming scope to a "minimal" version. This is appropriate when you're exploring an unknown problem space. It's inappropriate when you know exactly what's needed and the requirements are the distilled result of real-world use.
+So order the capabilities, and build each one complete to the product's bar: error handling, edge cases, tests, documentation. When something waits, say what waits and why. On one build the agent kept recommending the smaller, faster option and the owner kept rejecting it. They stopped and wrote the rule down: build each capability to the bar, sequence a separable capability for later if needed, and never cut scope to save effort.
 
-Build each feature completely, with error handling, edge cases, tests, documentation. "We'll polish it later" is a fiction. The polish phase never arrives. Ship the feature done or don't ship it.
+A minimal version is the right call when you are exploring a problem you do not understand yet. It is the wrong call when the requirements come from real use (months of validation, caught bugs, proven workflows). Those requirements are the specification.
 
 ### Commit as checkpoints
 
@@ -353,7 +361,19 @@ Not every line needs the same scrutiny. Calibrate your review to the risk:
 
 The calibration should shift over a project's lifetime: tight review early (while patterns are being established) → relaxed in the middle (patterns are proven) → tight again when entering new territory.
 
-The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect. Saying "looks good" to a summary is rubber-stamping. It gets harder to avoid as you trust the agent more, which is when it matters most: the agent is most likely to introduce a subtle bug in an area you have stopped reviewing closely because "it always gets this right."
+The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect. If a separate reviewer reads the diff in your place, see [What the owner checks when someone else reads the diff](#what-the-owner-checks-when-someone-else-reads-the-diff). Saying "looks good" to a summary is rubber-stamping. It gets harder to avoid as you trust the agent more, which is when it matters most: the agent is most likely to introduce a subtle bug in an area you have stopped reviewing closely because "it always gets this right."
+
+### What the owner checks when someone else reads the diff
+
+*Evidence: incident.*
+
+On larger work the owner often does not read every diff. An architect agent or a separate reviewer does. That delegation is sound only if the owner still checks what a diff reader cannot. Three checks stay with the owner:
+
+- **The result, in its real medium.** A reviewer who reads structure can approve work that fails in use. On one pipeline, structural review read as strong progress. Then the owner experienced the nine finished artifacts and graded all nine as misses. Use the thing yourself before you accept it.
+- **The state of the repository, from the repository.** A report that work is committed is a claim. One builder reported a commit hash that did not exist, and the gates and a review had already started without the work. Before a push or a release, ask which facts in the report were read from the repository and which were passed on from a builder.
+- **The design calls, on something you can see.** An approval given to a wall of prose is often a shrug. One owner told the architect that the design could not be approved from the document, and that it would have to be built and iterated. Ask for the artifact, then decide.
+
+The line-by-line read can go to the reviewer, as long as the reviewer is not the builder and the review record says what was checked and what was not.
 
 ### Show, don't tell
 
@@ -628,6 +648,14 @@ The cycle: **build** (agent implements a slice) → **self-test** (agent runs te
 
 When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked: nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks. Don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
 
+### One whole-change review before merge
+
+*Evidence: incident.*
+
+Reviews of the parts do not add up to a review of the whole. A per-task review sees one task's diff against one task's brief. It cannot see a defect that exists only where tasks meet: a value that one task produces and another reports, or a setting that changes what an earlier task assumed.
+
+So before merge, run one review of the whole change against the specification, by a reviewer that built none of it. On one slice each task had its own review. The review of the whole change then found a check that reported clear when its input was missing, in a configuration that no single task owned. It was fixed before merge. The [worked example](#worked-example-one-slice-end-to-end) tells the story in sequence.
+
 ### Verify the builder's report against the repository
 
 *Evidence: incident.*
@@ -714,9 +742,11 @@ These came from incidents in the author's projects where the cost was counted. T
 
 ### Route each task class by measured pass rate
 
-*Evidence: observed.*
+*Evidence: observed, incident.*
 
 Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
+
+Do not use price as a stand-in for capability. On one 80-item rule-application task scored against ground truth, a model that cost nothing to call matched the most capable model at 98.8 percent, and a paid model priced between them scored 92.5 percent. That is one task class and one run, so it does not rank the models. It shows that the ranking has to be measured. Score each class of task against known answers, then pin a model to the class. Keep the work of every cheaper model behind the same checks and the same review as the rest. If a model's work in a class needs more rework than the top model's, move that class to a stronger model.
 
 ### Honest cost reporting
 
@@ -863,7 +893,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 **The build, via subagents (§5, §9, §10).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents: spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
 
-**What the whole-change review caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Every per-task review was already separate from its builder (see [Builder/reviewer separation](#builderreviewer-separation)), and each one passed. The review of the whole change is what found it.
+**What the whole-change review caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Every per-task review was already separate from its builder (see [Builder/reviewer separation](#builderreviewer-separation)), and each one passed. The review of the whole change is what found it (see [One whole-change review before merge](#one-whole-change-review-before-merge)).
 
 **The operating-model sync (§3).** Midway, the human and agent kept colliding: the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." The rule was written down.
 

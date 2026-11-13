@@ -92,7 +92,7 @@ Prove one complete journey before adding many features, integrations, backends, 
 
 ### Sequence work, keep the bar
 
-Why: [Build complete, not fast](FIELD-MANUAL.md#build-complete-not-fast) and [Scope reduction, unstated or argued from effort](FIELD-MANUAL.md#scope-reduction-unstated-or-argued-from-effort).
+Why: [Sequence work, keep the bar](FIELD-MANUAL.md#sequence-work-keep-the-bar) and [Scope reduction, unstated or argued from effort](FIELD-MANUAL.md#scope-reduction-unstated-or-argued-from-effort).
 
 Order capabilities and build them one at a time, each complete to the product's quality bar. Deferring a whole capability is healthy sequencing. Thinning every capability to look finished produces a product that demos well and fails in use.
 

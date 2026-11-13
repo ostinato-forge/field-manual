@@ -2,7 +2,7 @@
 
 Real events from projects built with this method. Each entry is the evidence behind one or more practices in [FIELD-MANUAL.md](FIELD-MANUAL.md), and `Supports` names them. Identifying details are removed. Dates are month and year. The records themselves are private, so `Record` says what kind of record exists and nothing more. An entry with no dated record says `not recorded`.
 
-Entries are in date order. The one with no date comes last.
+Entries are in date order. The one with no date comes last. An entry keeps its number once it has one, so an entry added later can sit out of number order.
 
 ## I-01: A signing default that would have published private names
 
@@ -17,7 +17,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-06
 - What happened: During a build, the agent justified a recommendation by effort: the smaller, faster option. The owner rejected it. They stopped and agreed on the rule: build each capability to the bar, sequence a separable capability for later if needed, and never cut scope to save effort. They also named the phrases that signal the problem, such as "land green" and "least code". The rule went into the agent's standing guidance for every project. Two days later the owner had to restate it once.
 - Rule: When a correction is about how you build, stop and agree on the principle, then write it down.
-- Supports: FIELD-MANUAL.md, "Sync the operating model when it drifts" and "Scope reduction, unstated or argued from effort"
+- Supports: FIELD-MANUAL.md, "Sync the operating model when it drifts" and "Sequence work, keep the bar" and "Scope reduction, unstated or argued from effort"
 - Record: private session notes
 
 ## I-03: The reviews that hunted false-clear states
@@ -27,6 +27,14 @@ Entries are in date order. The one with no date comes last.
 - Rule: Missing evidence is never success. A reviewer who hunts for false-clear paths finds defects the builder cannot see.
 - Supports: FIELD-MANUAL.md, "Absence of evidence never renders as success" and "Coverage honesty"
 - Record: private project history and review findings
+
+## I-24: The review of the whole change
+
+- When: 2026-06
+- What happened: A slice was built as small tasks, each by a fresh agent, and each task had its own review. A final review of the whole change then found that one check scanned the wrong directory when the tool was started from another location. A missing directory gave an empty scan, and the product reported that check as clear. The product exists to prevent a false clear. The fix went in after the last task and before the merge, and the check now reports unknown.
+- Rule: Review the whole change once before merge. Reviews of the parts do not add up to a review of the whole.
+- Supports: FIELD-MANUAL.md, "One whole-change review before merge"
+- Record: private project history, and the account written into this manual the same day
 
 ## I-04: The account that flipped
 
@@ -49,7 +57,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-07
 - What happened: An architect presented a plan's design decisions as written text and asked the owner to approve them. The owner answered that they could not make design calls without seeing the thing, and that it would have to be built and iterated. No design call was made from the document.
 - Rule: Treat written design calls as provisional. Put something the owner can see or run in front of them early.
-- Supports: FIELD-MANUAL.md, "Design decisions need a visible artifact"
+- Supports: FIELD-MANUAL.md, "Design decisions need a visible artifact" and "What the owner checks when someone else reads the diff"
 - Record: private session notes
 
 ## I-07: Nine built, zero good
@@ -57,7 +65,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-08
 - What happened: A generation pipeline produced nine of ten planned creative artifacts. Structural review of the outputs read as strong progress. Then the owner experienced the artifacts in their real medium and graded all nine as misses, because the words did not work. A follow-up experiment on the words confirmed the gap.
 - Rule: A thing is done when someone has experienced it working in its real medium.
-- Supports: FIELD-MANUAL.md, "Live verification is the definition of done"
+- Supports: FIELD-MANUAL.md, "Live verification is the definition of done" and "What the owner checks when someone else reads the diff"
 - Record: private session notes
 
 ## I-08: A review of the wrong revision
@@ -105,7 +113,7 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-09
 - What happened: A builder reported that it had committed its work, gave a commit hash, and said the tree was clean and 19 commits ahead. The hash did not exist. The work was uncommitted. The gates and an external review had already started against a revision that did not contain it.
 - Rule: A builder's report is a claim. Read the repository before any gate, review, or push.
-- Supports: FIELD-MANUAL.md, "Verify the builder's report against the repository"
+- Supports: FIELD-MANUAL.md, "Verify the builder's report against the repository" and "What the owner checks when someone else reads the diff"
 - Record: private session notes
 
 ## I-14: A builder kept alive for four fix rounds
@@ -177,7 +185,15 @@ Entries are in date order. The one with no date comes last.
 - When: 2026-11
 - What happened: A repository kept its maintainer rules in `AGENTS.md`. A `CLAUDE.md` file in a directory above the repository made the coding tool skip `AGENTS.md` at session start, so sessions worked in the repository without its rules. Three probe sessions with tools turned off confirmed it: the file was not loaded by default, was loaded with a setting, and was loaded when a one-line `CLAUDE.md` in the repository imported it.
 - Rule: A guide in the repository is not a guide in the agent's context. Check that it loaded.
-- Supports: FIELD-MANUAL.md, "The project guide"
+- Supports: FIELD-MANUAL.md, "The project guide" and "Check that the guide reaches the agent"
+- Record: private session notes
+
+## I-25: The paid model that scored lower
+
+- When: 2026-11
+- What happened: An 80-item rule-application task was scored against ground truth on three models. A model that cost nothing to call matched the most capable model, at 98.8 percent. A paid model priced between them scored 92.5 percent. It cost more than the free model and scored lower.
+- Rule: Measure the pass rate for each class of task, then pin a model to the class. Price does not order capability.
+- Supports: FIELD-MANUAL.md, "Route each task class by measured pass rate"
 - Record: private session notes
 
 ## I-23: A release blocked by its own evidence gate
