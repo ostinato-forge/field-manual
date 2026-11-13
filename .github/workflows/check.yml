@@ -20,4 +20,4 @@ jobs:
       - name: Unit tests
         run: env -i HOME="$(mktemp -d)" PATH="$PATH" python3 -m unittest scripts/test_check_manual.py
       - name: Check the repository
-        run: python3 scripts/check_manual.py --only links,fences,punctuation,sources,evidence,ledger
+        run: python3 scripts/check_manual.py --only links,fences,punctuation,sources,evidence,ledger,shared-lists,terms
