@@ -267,9 +267,9 @@ Anthropic's 2025 Claude Code guidance named the sequence: explore, plan, code, c
 
 ### TDD works better with agents, not worse
 
-*Evidence: researched, converged.*
+*Evidence: converged.*
 
-Willison advocates test-first development for agent workflows (S7). The pattern, as this manual applies it:
+Willison advocates test-first development for agent workflows (S7). Anthropic's 2025 Claude Code guidance agrees: "Test-driven development (TDD) becomes even more powerful with agentic coding" (S10). The pattern, as this manual applies it:
 
 1. Write the test (or have the agent write it from your spec)
 2. Verify the test fails, and fails for the intended reason, and that it captures the behavior you actually want
@@ -373,7 +373,7 @@ If something important is decided (an architectural approach, a naming conventio
 
 The agent can always re-read a file. It can't always recall a decision from 50 messages ago, especially across session boundaries. If a decision matters tomorrow, write it down today.
 
-The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One team was asked to record a set of decisions as comments on a document. The export that generated the downstream guide stripped comment markup, comments could be resolved and then hidden, and a PDF for stakeholders carried none of them. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
+The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One team had to record a set of decisions on a shared document. A check showed that the export for the downstream guide strips comment markup, that a comment can be resolved and hidden, and that a PDF for stakeholders would carry none of them, so the decisions went into the body. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
 
 ---
 
@@ -387,7 +387,7 @@ This is the one sentence the rest of this section depends on. An agent asked whe
 
 Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the code), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it. When an agent reports a validation run, the same states apply under their reporting names: passed (verified), failed, not run (unknown), partial (incomplete), blocked, stale, not applicable.
 
-This applies to your own tooling too. One builder's efficiency monitor reported zero interventions for weeks. The detectors were not quiet; a settings file had disabled the plugin and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
+This applies to your own tooling too. One builder's efficiency monitor reported zero interventions in a seven-day report, because a settings problem had disabled the plugin's hooks and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
 ### Automated gates are force multipliers
 
@@ -433,7 +433,7 @@ This matters more with agents than without. Agents write tests that pass. Some o
 
 A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
 
-One team shipped a readiness fix whose tests modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder, the reviewer, and the shared fake all agreed the fix worked, and it did nothing until a reviewer ran the real browser. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
+One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
 
 ### Coverage honesty
 
@@ -468,7 +468,7 @@ Use the strongest practical proof for the claim being made:
 
 For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests cover it), live validated (the real path was exercised), or stale (the source changed after the evidence was recorded).
 
-A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a page of operational cautions about a library from the library's own documentation plus a design plan in an unmerged pull request, and presented it as verified. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
+A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
 
 If the proof is weaker than the prose, weaken the prose. Honest "not yet" sections are better than confident claims the product cannot defend.
 
@@ -478,7 +478,7 @@ If the proof is weaker than the prose, weaken the prose. Honest "not yet" sectio
 
 Every practice above points at the change: review the diff, match proof to the claim, mutation-test the guard. None of them asks what the change did to everything it never named. That gap belongs to any edit applied by a tool rather than typed by hand, because the tool acts on a model and a property you set on one element often lives on its container.
 
-A script edited eleven items in a structured document, and its log was accurate for all eleven. It had also changed the list formatting of sixty-six other items in the section, because the glyph was a property of the list and not of the item.
+A script edited eleven items in a structured document, and its log was accurate for all eleven. It had also changed the list formatting of sixty-six items in the section, including items it never named, because the glyph was a property of the list and not of the item.
 
 The rule: when a change is applied by a codemod, formatter, bulk rename, migration, or document script, the proof has to include a sample of what you did not intend to change. In a repository that means reading the whole diff and not only the files you expected. Where there is no diff, re-read the artifact and compare it against its previous state on a property the change should not have touched. Both "review the diff" and "match proof to the claim" were satisfied in the case above, and the damage was still invisible, which is why this is a separate check rather than a restatement.
 
@@ -540,7 +540,7 @@ Chunked docs in the repo enable progressive disclosure: load only what's needed 
 
 Published artifacts are often part generated from a source and part written by hand: a page built from a design document plus hand-written sections, a README with an embedded command output, a dashboard with a static header. A fix to the source reaches the reader only through the generated part. Nothing reports the rest.
 
-On one project, nineteen corrections went into a source document and six reached the published page. The other thirteen sat in sections the generator does not read, and the pipeline said nothing.
+On one project, eighteen corrections went into a source document and six reached the published page. The other twelve sat in sections the generator does not read; a check by hand found them stated correctly in the hand-written parts, and the pipeline would have said nothing either way.
 
 Know which parts of a published artifact are generated and which are hand-written, and treat a source correction as unfinished until the hand-written surface has been checked for the same fact. If nobody can say where the split falls, that is the finding. This is a different question from coverage honesty: coverage asks whether a check ran, and this asks whether a fix arrived.
 
@@ -610,7 +610,7 @@ After every builder hand-back, and before any gate, review, or push, read the re
 
 For any packet where the premise might be wrong, split the brief. Phase one: audit the current behavior, write the failing test that captures the intended change, and stop. The architect reads the audit and the red test, and ratifies or corrects the premise. Phase two: implement until green.
 
-The stop is the point. Two of the first several two-phase briefs on one project revealed a wrong premise before a line of implementation existed. A single-phase brief would have built the wrong thing correctly, and the review would have had to catch it in a diff instead of a paragraph.
+The stop is the point. On its first use on one project, a two-phase brief revealed two wrong premises before a line of implementation existed. A single-phase brief would have built the wrong thing correctly, and the review would have had to catch it in a diff instead of a paragraph.
 
 ### Fresh context per batch, bounded review cadence
 
@@ -626,7 +626,7 @@ The cadence that came out of it: a fresh builder with a cold brief for each sub-
 
 When you need a roster of agent roles for a domain, research how humans in that domain actually organize before inventing one. A made-up roster feels plausible and is usually wrong in ways that cost later: authority flows the wrong direction, two roles overlap, a real role is missing.
 
-On one project the first roster was invented and read well. Research found that its main pairing had existed in advertising since 1949 under different names, and that its review panel copied a well-known studio practice with the authority reversed. Name the sources in the role document so the next person can check them.
+On one project the first roster was made up, and the owner asked for research instead. The research showed that the roster repeated the arrangement that a 1949 advertising pairing replaced, and that its review panel held the authority that a well-known studio practice withholds. Name the sources in the role document so the next person can check them.
 
 ### Narrow review scopes
 
@@ -692,7 +692,7 @@ Apply the measure to every efficiency decision. Does a shorter brief lower total
 
 ### Rules that came from numbers
 
-*Evidence: incident.*
+*Evidence: observed, incident.*
 
 These came from measured incidents rather than principle, and they generalize:
 
@@ -899,7 +899,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 **What the whole-change review caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Every per-task review was already separate from its builder (§9), and each one passed. The review of the whole change is what found it.
 
-**The operating-model sync (§3).** Midway, the human and agent kept colliding: the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." Written down, the friction stopped.
+**The operating-model sync (§3).** Midway, the human and agent kept colliding: the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." The rule was written down.
 
 **Finishing (§7, §8).** The gates were green (full suite, linters, types), and the human read the diff, not the agent's summary. This account does not say whether the feature was also run on its real path. Section 7 requires that before "done". State files and the one rolling plan were updated in the same arc, and the work merged on green.
 
@@ -986,7 +986,7 @@ Each entry names the section it supports, a short quote from the page, and the m
 - **S7.** [Simon Willison: Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) (2026-02). Supports section 5, "TDD works better with agents, not worse": "test-first development helps agents write more succinct and reliable code". Read 2026-11.
 - **S8.** [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) (2025-06). Supports section 2, "Security defaults from the start": "an attacker can easily trick it into accessing your private data and sending it to that attacker". Read 2026-11.
 - **S9.** [Addy Osmani: My LLM coding workflow going into 2026](https://addyosmani.com/blog/ai-coding-workflow/) (2026-01). Supports section 2, "Git as your safety net"; section 4, "Specs before code"; section 5, "Small, verifiable steps"; and section 7, "Automated gates are force multipliers": "Start with a clear plan (specs before code)". Read 2026-11.
-- **S10.** [Anthropic: Claude Code: Best practices for agentic coding](https://web.archive.org/web/20250602202220/https://www.anthropic.com/engineering/claude-code-best-practices) (2025-04, archived copy; the original address now leads to a different page). Supports section 5, "Plan when choices matter, just build when they don't": "Explore, plan, code, commit". Read 2026-11.
+- **S10.** [Anthropic: Claude Code: Best practices for agentic coding](https://web.archive.org/web/20250602202220/https://www.anthropic.com/engineering/claude-code-best-practices) (2025-04, archived copy; the original address now leads to a different page). Supports section 5, "Plan when choices matter, just build when they don't" and "TDD works better with agents, not worse": "Explore, plan, code, commit". Read 2026-11.
 - **S11.** [BuildBetter: AGENTS.md Complete Guide for Engineering Teams](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/) (2026-05). Supports section 2, "The project operating manual": "it is read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q". Read 2026-11.
 
 ---

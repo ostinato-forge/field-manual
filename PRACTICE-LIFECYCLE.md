@@ -120,7 +120,7 @@ Promotion choices:
 
 Prefer the strongest durable form that fits the claim. A security requirement should become code or policy, not only prose.
 
-A practice that comes from a single incident can enter [FIELD-MANUAL.md](FIELD-MANUAL.md) on the owner's decision, without a practice card or a trial. It is tagged `incident`, and its entry in [INCIDENTS.md](INCIDENTS.md) is its record. A practice that claims a measured effect, such as cost or speed, needs the card and the trial first.
+A practice that comes from a single incident can enter [FIELD-MANUAL.md](FIELD-MANUAL.md) on the owner's decision, without the practice card of stage 2 or the trial of stage 4. It is tagged `incident`, and its entry in [INCIDENTS.md](INCIDENTS.md) is its record. The exception is a practice that claims a measured effect, such as cost or speed: it needs the card and the trial first, whatever its source.
 
 ## 7. Distribute
 

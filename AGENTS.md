@@ -56,8 +56,8 @@ Every practice heading in sections 1 to 11 of `FIELD-MANUAL.md` carries an evide
 
 How a practice enters:
 
-- A practice from a single incident enters on the owner's decision. It is tagged `incident`, and its ledger entry is its record.
-- Any other practice enters through the review in `PRACTICE-LIFECYCLE.md`. A practice card and a trial are required only when the practice claims a measured effect, such as cost or speed. A human promotes it.
+- A practice from a single incident enters on the owner's decision. It is tagged `incident`, and its ledger entry is its record. It needs a practice card and a trial only if it claims a measured effect, such as cost or speed.
+- Any other practice enters through the review in `PRACTICE-LIFECYCLE.md`: candidate, reviewed, trial where the claim is testable, then promotion by a human.
 
 The bar says what counts as evidence; the lifecycle says how it is checked.
 
