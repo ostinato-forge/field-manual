@@ -59,6 +59,20 @@ Both sides bring judgment to the work. The best results come from honest frictio
 
 Anti-pattern to watch for: **performative agreement**. When you give feedback, some agents will immediately agree and implement without evaluating whether the feedback is technically correct. Good agents push back when your feedback would make things worse.
 
+### AI can veto but cannot approve
+
+*Evidence: observed.*
+
+Agents can reject work that fails invariants (a test suite, a linter, a security check). But final approval to merge and ship requires human judgment. This is the authority boundary: agents enforce constraints, humans make acceptance decisions.
+
+### Drafts vs. canonical artifacts
+
+*Evidence: observed.*
+
+When agents produce work products (not just code: reports, analyses, decisions), treat them as drafts until a human or policy engine promotes them. The boundary should be structural, not just social: agent output is labeled as draft, and promotion to canonical status is a separate, auditable step.
+
+Without this boundary, AI can effectively self-certify its own work. The draft/canonical split makes human review a part of the system, not just a good intention.
+
 ---
 
 ## 2. Set Up for Success
@@ -657,20 +671,6 @@ Bad: "Review all the changes and make sure everything looks good."
 Without explicit stops between slices, agents chain work indefinitely. Each chained step inherits and amplifies any drift from the plan. Build natural stopping points where you evaluate direction, not just correctness.
 
 The stop isn't "does the code work?" It's "is this still building toward what I want?"
-
-### AI can veto but cannot approve
-
-*Evidence: observed.*
-
-Agents can reject work that fails invariants (a test suite, a linter, a security check). But final approval to merge and ship requires human judgment. This is the authority boundary: agents enforce constraints, humans make acceptance decisions.
-
-### Drafts vs. canonical artifacts
-
-*Evidence: observed.*
-
-When agents produce work products (not just code: reports, analyses, decisions), treat them as drafts until a human or policy engine promotes them. The boundary should be structural, not just social: agent output is labeled as draft, and promotion to canonical status is a separate, auditable step.
-
-Without this boundary, AI can effectively self-certify its own work. The draft/canonical split makes human review a part of the system, not just a good intention.
 
 ### Parallel work: investigate freely, build on separate files
 
