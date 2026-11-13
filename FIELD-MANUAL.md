@@ -415,15 +415,17 @@ When an agent reports a validation run, three result states use reporting names:
 
 This applies to your own tooling too. One builder's efficiency monitor reported zero interventions in a seven-day report, because a settings problem had disabled the plugin's hooks and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
-### Automated gates are force multipliers
+### Coverage honesty
 
-*Evidence: researched, converged.*
+*Evidence: incident.*
 
-A 2022 study of 39 production codebases found that **low-quality code contains 15 times more defects** than high-quality code, and that resolving an issue in it takes on average 124% more development time (S4). That study predates coding agents. A 2026 study by two of the same authors tested models directly on 5,000 Python files. Every medium-sized open model broke healthy code significantly less often when asked to refactor it, a risk reduction of 15 to 30%. The one state-of-the-art model in the study showed no significant difference (S5). CodeScene's own guidance is to aim for a Code Health of at least 9.5 out of 10 (S6).
+"Found nothing" is not the same as "didn't look." When running quality checks:
 
-What this means in practice: **invest in your automated quality pipeline before investing in agent sophistication.** Tests, linters, type checkers, and formatters provide backpressure that catches agent mistakes automatically. The loop becomes: agent writes code → automated tools catch issues → agent fixes them → you oversee the direction.
+- **Full coverage**: all expected checks ran and completed
+- **Gaps named**: some expected checks were left out, and the report names each one and why
+- **Degraded**: checks that were meant to run failed to run, and the report says what was not checked
 
-Osmani describes this as "having an extremely fast junior dev whose work is instantly checked by a tireless QA engineer" (S9).
+A clean report with degraded coverage is less trustworthy than a report with findings but full coverage. Track what you checked, not just what you found. Coverage is a separate axis from the result states above: a report with full coverage can hold a failed check, and a report with named gaps can hold only passes.
 
 ### Separate who builds from who evaluates
 
@@ -437,41 +439,15 @@ Practical applications:
 - **Test evaluation**: if the agent wrote both the code and the tests, verify the tests actually test something meaningful. Tests written to make the suite pass are paperwork.
 - **Completion assessment**: don't ask the agent "are you done?" It will say yes. Define done as observable criteria (tests pass, feature works in the browser, deployment succeeds) and check those criteria yourself.
 
-### Live verification is the definition of done
+### Automated gates are force multipliers
 
-*Evidence: incident.*
+*Evidence: researched, converged.*
 
-Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work: in a browser, in a terminal, against real data.
+A 2022 study of 39 production codebases found that **low-quality code contains 15 times more defects** than high-quality code, and that resolving an issue in it takes on average 124% more development time (S4). That study predates coding agents. A 2026 study by two of the same authors tested models directly on 5,000 Python files. Every medium-sized open model broke healthy code significantly less often when asked to refactor it, a risk reduction of 15 to 30%. The one state-of-the-art model in the study showed no significant difference (S5). CodeScene's own guidance is to aim for a Code Health of at least 9.5 out of 10 (S6).
 
-This is the gap where bugs hide: code that passes all tests but doesn't actually do what the user needs. The builder cannot close this gap by reporting on its own work. Someone other than the builder has to use the thing, and the record says who ran it: you, or an agent whose run is labeled as agent-run.
+What this means in practice: **invest in your automated quality pipeline before investing in agent sophistication.** Tests, linters, type checkers, and formatters provide backpressure that catches agent mistakes automatically. The loop becomes: agent writes code → automated tools catch issues → agent fixes them → you oversee the direction.
 
-### Mutation-test the tests
-
-*Evidence: incident.*
-
-A test that passes proves little until you know it can fail. For every guard, check, or honesty invariant that matters, remove or invert it and confirm that exactly its own tests go red and nothing else does. Then restore it. The transcript of that red-then-green is stronger evidence than the green alone, and it belongs in the PR.
-
-This matters more with agents than without. Agents write tests that pass. Some of those tests assert the implementation back at itself, or stub the very path they claim to cover. A mutation check separates tests that are load-bearing from tests that are paperwork, and it takes a minute per guard.
-
-### Check your fakes against the real dependency
-
-*Evidence: incident.*
-
-A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
-
-One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
-
-### Coverage honesty
-
-*Evidence: incident.*
-
-"Found nothing" is not the same as "didn't look." When running quality checks:
-
-- **Full coverage**: all expected checks ran and completed
-- **Gaps named**: some expected checks were left out, and the report names each one and why
-- **Degraded**: checks that were meant to run failed to run, and the report says what was not checked
-
-A clean report with degraded coverage is less trustworthy than a report with findings but full coverage. Track what you checked, not just what you found. Coverage is a separate axis from the result states above: a report with full coverage can hold a failed check, and a report with named gaps can hold only passes.
+Osmani describes this as "having an extremely fast junior dev whose work is instantly checked by a tireless QA engineer" (S9).
 
 ### Match proof to the claim
 
@@ -497,6 +473,30 @@ For products with public, sales, safety, or architecture claims, keep a small cl
 A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
 
 If the proof is weaker than the prose, weaken the prose. Honest "not yet" sections are better than confident claims the product cannot defend.
+
+### Live verification is the definition of done
+
+*Evidence: incident.*
+
+Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work: in a browser, in a terminal, against real data.
+
+This is the gap where bugs hide: code that passes all tests but doesn't actually do what the user needs. The builder cannot close this gap by reporting on its own work. Someone other than the builder has to use the thing, and the record says who ran it: you, or an agent whose run is labeled as agent-run.
+
+### Mutation-test the tests
+
+*Evidence: incident.*
+
+A test that passes proves little until you know it can fail. For every guard, check, or honesty invariant that matters, remove or invert it and confirm that exactly its own tests go red and nothing else does. Then restore it. The transcript of that red-then-green is stronger evidence than the green alone, and it belongs in the PR.
+
+This matters more with agents than without. Agents write tests that pass. Some of those tests assert the implementation back at itself, or stub the very path they claim to cover. A mutation check separates tests that are load-bearing from tests that are paperwork, and it takes a minute per guard.
+
+### Check your fakes against the real dependency
+
+*Evidence: incident.*
+
+A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
+
+One team's readiness fix reached review with tests that modelled a browser event as blocking until the network settled, and in the real browser the event resolves in a few milliseconds. The builder and the shared fake agreed the fix worked, it did nothing, and a review that probed the real browser caught it before merge. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
 
 ### Prove the unchanged set
 
