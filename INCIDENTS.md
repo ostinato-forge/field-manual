@@ -191,7 +191,7 @@ Entries are in date order. The one with no date comes last. An entry keeps its n
 ## I-25: The paid model that scored lower
 
 - When: 2026-11
-- What happened: An 80-item rule-application task was scored against ground truth on three models. A model that cost nothing to call matched the most capable model, at 98.8 percent. A paid model priced between them scored 92.5 percent. It cost more than the free model and scored lower.
+- What happened: An 80-item rule-application task was scored against ground truth on three models. A model with no per-call charge to the builder matched the most capable model, at 98.8 percent. A paid model priced between them scored 92.5 percent. It cost more and scored lower.
 - Rule: Measure the pass rate for each class of task, then pin a model to the class. Price does not order capability.
 - Supports: FIELD-MANUAL.md, "Route each task class by measured pass rate"
 - Record: private session notes

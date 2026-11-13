@@ -13,7 +13,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `STARTER-CLAUDE-MD.md` - project guide template.
 - `CHECKLISTS.md` - checkpoint checklists for the method.
 - `PRACTICE-LIFECYCLE.md` - how techniques enter and leave guidance.
-- `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names. The one exception is its evidence statement, which names the author's own tool as a disclosure.
+- `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names. The one named tool is the author's own, and the file's evidence statement discloses that.
 - `INCIDENTS.md` - the incident ledger. One entry per real event, with the practices it supports.
 - `templates/` - fill-in artifacts. `examples/` - a worked slice, and the case study of one product built two ways.
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.

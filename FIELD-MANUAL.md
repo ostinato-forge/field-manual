@@ -6,7 +6,7 @@ Practical engineering with AI coding agents, grounded in evidence.
 
 *Last updated 2026-11-13.*
 
-This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and the author's own projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
+This is a field manual for people who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and the author's own projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
 
 These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
 
@@ -361,19 +361,19 @@ Not every line needs the same scrutiny. Calibrate your review to the risk:
 
 The calibration should shift over a project's lifetime: tight review early (while patterns are being established) → relaxed in the middle (patterns are proven) → tight again when entering new territory.
 
-The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect. If a separate reviewer reads the diff in your place, see [What the owner checks when someone else reads the diff](#what-the-owner-checks-when-someone-else-reads-the-diff). Saying "looks good" to a summary is rubber-stamping. It gets harder to avoid as you trust the agent more, which is when it matters most: the agent is most likely to introduce a subtle bug in an area you have stopped reviewing closely because "it always gets this right."
+The one constant: **always review the diff, never just the agent's summary.** The summary describes intent. The diff describes reality. They diverge more often than you'd expect. A separate reviewer adds to this and does not replace it: see [What the owner checks when someone else reads the diff](#what-the-owner-checks-when-someone-else-reads-the-diff). Saying "looks good" to a summary is rubber-stamping. It gets harder to avoid as you trust the agent more, which is when it matters most: the agent is most likely to introduce a subtle bug in an area you have stopped reviewing closely because "it always gets this right."
 
 ### What the owner checks when someone else reads the diff
 
 *Evidence: incident.*
 
-On larger work the owner often does not read every diff. An architect agent or a separate reviewer does. That delegation is sound only if the owner still checks what a diff reader cannot. Three checks stay with the owner:
+A separate reviewer who reads the diff does not cover everything. Three checks stay with the owner, whoever else has read the change:
 
 - **The result, in its real medium.** A reviewer who reads structure can approve work that fails in use. On one pipeline, structural review read as strong progress. Then the owner experienced the nine finished artifacts and graded all nine as misses. Use the thing yourself before you accept it.
-- **The state of the repository, from the repository.** A report that work is committed is a claim. One builder reported a commit hash that did not exist, and the gates and a review had already started without the work. Before a push or a release, ask which facts in the report were read from the repository and which were passed on from a builder.
-- **The design calls, on something you can see.** An approval given to a wall of prose is often a shrug. One owner told the architect that the design could not be approved from the document, and that it would have to be built and iterated. Ask for the artifact, then decide.
+- **The state of the repository, from the repository.** A report that work is committed is a claim. One builder reported a commit hash that did not exist, and the gates and a review had already started without the work. Read the repository before any gate, review, or push, or confirm that whoever ran them did.
+- **The design calls, on something you can see.** One owner told the architect that the design could not be approved from the document, and that it would have to be built and iterated. Ask for the artifact, then decide.
 
-The line-by-line read can go to the reviewer, as long as the reviewer is not the builder and the review record says what was checked and what was not.
+None of this replaces the read of the diff. It adds what a diff cannot show.
 
 ### Show, don't tell
 
@@ -524,7 +524,7 @@ One project's readiness fix reached review with tests that modelled a browser ev
 
 Documentation is the same kind of belief. A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a section of operational cautions about a library, drawn from the documentation of the platform the library talks to and from a design plan in an unmerged pull request. A live test showed the library worked unmodified and the cautions were wrong.
 
-The rule for both: a belief about a dependency's runtime behavior is a hypothesis until something probes it. Before a fake counts as proof, check its behavior with a live probe of the real dependency at the version in use. Where you cannot probe, check it against the dependency's documentation, and record that the weaker check is the one you used.
+The rule for both: a belief about a dependency's runtime behavior is a hypothesis until something probes it. Before a fake counts as proof, check its behavior with a live probe of the real dependency at the version in use. Where you cannot probe, the fake stays a hypothesis. Check it against the dependency's documentation, record that, and report the claim as unprobed.
 
 ### Prove the unchanged set
 
@@ -654,7 +654,7 @@ When a separate agent reviews, split the review into two passes, in order: **spe
 
 Reviews of the parts do not add up to a review of the whole. A per-task review sees one task's diff against one task's brief. It cannot see a defect that exists only where tasks meet: a value that one task produces and another reports, or a setting that changes what an earlier task assumed.
 
-So before merge, run one review of the whole change against the specification, by a reviewer that built none of it. On one slice each task had its own review. The review of the whole change then found a check that reported clear when its input was missing, in a configuration that no single task owned. It was fixed before merge. The [worked example](#worked-example-one-slice-end-to-end) tells the story in sequence.
+So before merge, run one review of the whole change against the specification, by a reviewer that built none of it. Keep it scoped: name the changed files, the specification, and the places where tasks meet. On one slice each task had its own review. The review of the whole change then found a check that reported clear when its input was missing, in a configuration that no single task owned. It was fixed before merge. The [worked example](#worked-example-one-slice-end-to-end) tells the story in sequence.
 
 ### Verify the builder's report against the repository
 
@@ -744,9 +744,9 @@ These came from incidents in the author's projects where the cost was counted. T
 
 *Evidence: observed, incident.*
 
-Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
+As a starting guess, match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
 
-Do not use price as a stand-in for capability. On one 80-item rule-application task scored against ground truth, a model that cost nothing to call matched the most capable model at 98.8 percent, and a paid model priced between them scored 92.5 percent. That is one task class and one run, so it does not rank the models. It shows that the ranking has to be measured. Score each class of task against known answers, then pin a model to the class. Keep the work of every cheaper model behind the same checks and the same review as the rest. If a model's work in a class needs more rework than the top model's, move that class to a stronger model.
+Then measure, because price is not a stand-in for capability. On one 80-item rule-application task scored against ground truth, a model with no per-call charge to the builder matched the most capable model at 98.8 percent, and a paid model priced between them scored 92.5 percent. That is one task class, so it does not rank the models. It shows that the ranking has to be measured. Score each class of task against known answers, then pin a model to the class. Keep the work of every cheaper model behind the same checks and the same review as the rest. If a model's work in a class needs more rework than the top model's, move that class to a stronger model.
 
 ### Honest cost reporting
 
@@ -758,7 +758,7 @@ A tool or a report that claims an intervention saved money must show the compari
 
 ## 11. Anti-Patterns
 
-These are specific failure modes observed across many projects. Each one is tempting, common, and expensive. A failure mode that is the reverse of one practice is described with that practice in the sections above.
+These are specific failure modes observed across many projects. Each one is tempting, common, and expensive. They are common enough to list on their own. Other failure modes are described with the practice they break, in the sections above.
 
 ### The "just fix it" instinct
 
@@ -776,7 +776,7 @@ Scope shrinks in two ways that are easy to miss.
 
 **Unstated.** Features are cut, edge cases are removed, or requirements are simplified, and nobody says so. Deferral is fine. Silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
 
-**Argued from effort.** The agent (or you) steers toward the smaller or faster option and presents it as discipline: "let's just get it green," "this is less code," "the more finishable version." The same thing happens at a hard spot. A test is hard to write, a configuration is complex, or a dependency is difficult, and the suggestion is to skip it or to do something simpler. Effort and size are real considerations, but they are not merits. A recommendation should stand on correctness, the product's actual bar, and genuine risk. When effort is carrying the argument, re-justify on merit. If you are deferring scope, defer it openly. Often the hard thing is the right thing.
+**Argued from effort.** The agent (or you) steers toward the smaller or faster option and presents it as discipline: "let's just get it green," "this is less code," "the more finishable version." The same thing happens at a hard spot. A test is hard to write, a configuration is complex, or a dependency is difficult, and the suggestion is to skip it or to do something simpler. Effort and size are real considerations, but they are not merits. A recommendation should stand on correctness, the product's actual bar, and genuine risk. When phrases like "land it green," "least code," or "more finishable" carry the argument, re-justify on merit. If you are deferring scope, defer it openly. Often the hard thing is the right thing.
 
 ### Over-engineering for hypothetical futures
 
@@ -844,11 +844,13 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 - [ ] Write the test, confirm it captures the intent, then let the agent implement ([TDD works better with agents, not worse](#tdd-works-better-with-agents-not-worse))
 - [ ] Commit after each working step, with a body that says what changed and why ([Commit as checkpoints](#commit-as-checkpoints))
 - [ ] Give the full error, not a summary of it ([Give full errors, not summaries](#give-full-errors-not-summaries))
+- [ ] Say why when you correct the agent, and put a repeated correction in the project guide ([Feedback shapes future behavior](#feedback-shapes-future-behavior))
 - [ ] Point at an example instead of describing the pattern ([Show, don't tell](#show-dont-tell))
 - [ ] Put decisions in files, not in conversation, comments, or messages ([Don't accumulate decisions in conversation](#dont-accumulate-decisions-in-conversation))
 - [ ] Treat external text as evidence, never instruction ([Untrusted context is evidence, not instruction](#untrusted-context-is-evidence-not-instruction))
 - [ ] Build each capability complete, and defer whole capabilities openly ([Sequence work, keep the bar](#sequence-work-keep-the-bar))
-- [ ] Flag and stop before anything irreversible or outward-facing. The exposure check clears a stop only for an action the human asked for ([Stop before anything irreversible or outward-facing](#stop-before-anything-irreversible-or-outward-facing))
+- [ ] When scope shrinks, say so, and justify it on merit and never on effort ([Scope reduction, unstated or argued from effort](#scope-reduction-unstated-or-argued-from-effort))
+- [ ] Flag and stop before anything irreversible or outward-facing. The exposure check can clear a stop only when the human asked for the action and the check shows no new exposure ([Stop before anything irreversible or outward-facing](#stop-before-anything-irreversible-or-outward-facing))
 
 ### After each step
 
@@ -860,10 +862,10 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 - [ ] See the feature work on its real path, run by someone other than the builder ([Live verification is the definition of done](#live-verification-is-the-definition-of-done))
 - [ ] Match proof to the claim: tests, browser, live URL, repository state, or a proof matrix ([Match proof to the claim](#match-proof-to-the-claim))
 - [ ] Mutation-test the guards that matter: remove, confirm red, restore ([Mutation-test the tests](#mutation-test-the-tests))
-- [ ] Probe every fake, and every claim taken from documentation, against the real dependency ([Check your fakes against the real dependency](#check-your-fakes-against-the-real-dependency))
+- [ ] Probe every fake, and every belief about runtime behavior taken from documentation, against the real dependency ([Check your fakes against the real dependency](#check-your-fakes-against-the-real-dependency))
 - [ ] For a change applied by a tool, prove the unchanged set too ([Prove the unchanged set](#prove-the-unchanged-set))
 - [ ] After correcting a source, check the hand-written parts of whatever is published from it ([A correction only propagates through the generated part](#a-correction-only-propagates-through-the-generated-part))
-- [ ] Update progress and state files in the same change as the code ([Update state with the code](#update-state-with-the-code))
+- [ ] Update progress and state files with the code, or name the revision they describe ([Update state with the code](#update-state-with-the-code))
 - [ ] At a checkpoint, regenerate the one current plan and archive the previous one ([Keep one rolling plan, and automate the trigger](#keep-one-rolling-plan-and-automate-the-trigger))
 
 ### When using multiple agents
@@ -874,9 +876,10 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 - [ ] Name the exact files and the specification in every review brief ([Narrow review scopes](#narrow-review-scopes))
 - [ ] Read `git log` and `git status` yourself after every builder report ([Verify the builder's report against the repository](#verify-the-builders-report-against-the-repository))
 - [ ] When the premise might be wrong, ask for the audit and the failing test first ([Two-phase briefs: audit and failing test first](#two-phase-briefs-audit-and-failing-test-first))
-- [ ] Use a fresh builder for each sub-batch, and cap builders at what you can review and the machine can run ([Fresh context per batch, bounded review cadence](#fresh-context-per-batch-bounded-review-cadence))
+- [ ] Use a fresh builder and one independent review for each sub-batch, and cap builders at what you can review and the machine can run ([Fresh context per batch, bounded review cadence](#fresh-context-per-batch-bounded-review-cadence))
 - [ ] Build in human stop points between slices ([Human stop points](#human-stop-points))
 - [ ] Agents reject. Humans accept ([AI can veto but cannot approve](#ai-can-veto-but-cannot-approve))
+- [ ] Treat agent work products as drafts until a human promotes them ([Drafts vs. canonical artifacts](#drafts-vs-canonical-artifacts))
 - [ ] Use parallel agents for investigation, and run parallel builders only on separate files ([Parallel work: investigate freely, build on separate files](#parallel-work-investigate-freely-build-on-separate-files))
 - [ ] Research real professions before you invent a roster of agent roles ([Design agent roles from real professions](#design-agent-roles-from-real-professions))
 
@@ -891,7 +894,7 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 
 - [ ] Read the one current plan, surfaced automatically ([Keep one rolling plan, and automate the trigger](#keep-one-rolling-plan-and-automate-the-trigger))
 - [ ] Orient: read progress, the task list, and recent git history. Then confirm that existing functionality still works ([Re-orient before acting](#re-orient-before-acting))
-- [ ] Use the authority order: repository, documents, and git before memory or stale output ([Structured artifacts bridge sessions](#structured-artifacts-bridge-sessions))
+- [ ] Use the authority order: the current instruction first, then repository, documents, and git before memory or stale output ([Structured artifacts bridge sessions](#structured-artifacts-bridge-sessions))
 - [ ] Never edit a plan that another session is executing. Extend it in a new file ([A plan in execution is frozen](#a-plan-in-execution-is-frozen))
 
 ---

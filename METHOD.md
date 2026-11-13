@@ -540,7 +540,7 @@ Do not claim savings until accepted outcomes, review burden, failures, runtime, 
 
 ## 20. Common failure modes
 
-FIELD-MANUAL.md describes most of these beside the practice each one breaks, with the incident behind it where one exists. Section 11 of the manual collects the anti-patterns that belong to no single practice.
+FIELD-MANUAL.md describes most of these beside the practice each one breaks, with the incident behind it where one exists. Section 11 of the manual lists the anti-patterns that are common enough to name on their own.
 
 - One large prompt for a complex system.
 - Builder self-approval.

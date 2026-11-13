@@ -6,7 +6,7 @@ There is no one way to build with agents. The same product, under the same owner
 
 ## What never flexed
 
-The project wrote down the invariants before the first line of code and pasted them into every dispatch:
+The owner wrote down the invariants before the first line of code and pasted them into every dispatch:
 
 - One component is the only verdict authority. Everything else returns drafts.
 - A passing result and its receipt (the record the product issues for that result) are reserved for deterministic evidence. Preview and model judgment can surface findings but can never mint a pass.
@@ -23,7 +23,7 @@ The first release followed a plan set written before any code: thesis and positi
 
 Four roles ran on models from three different vendors. The human founder owned product, UX, and every push and merge. An architect session owned the design, the slice map, the briefs, and enforcement of the bar, and wrote no product code. One vendor's model implemented, test first, one task at a time. A second vendor's model reviewed after every task as both senior engineer and engineering manager, with "needs fixes" as the answer to any patch that matched the spec but was not senior work. A third vendor's model reviewed every pull request against main for security, independent of the code reviewer, and a green CI run plus an approved code review did not skip it.
 
-Work shipped in what the project called coherence slices: one pull request per idea a reader can hold in a sentence, not one per task and not one per phase. Lessons the project kept from this method:
+Work shipped in what the project called coherence slices: one pull request per idea a reader can hold in a sentence, not one per task and not one per phase. Lessons the owner kept from this method:
 
 - A slice is a PR. A task is not. Fifteen task commits on a working branch became three PRs a reviewer could read.
 - Stacked PRs plus squash merges rewrite branch history for every other clone. The second release did not stack.
