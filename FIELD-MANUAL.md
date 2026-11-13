@@ -31,7 +31,7 @@ Each practice heading in sections 1 to 11 is followed by an evidence line that n
 
 Opinions are labeled as opinions. Preferences are left out. When evidence is thin, that's noted.
 
-Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and the author's own production projects, including one whose build record is summarized in the case study near the end. Full references at the end.
+Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and the author's own production projects, including one whose build record is summarized in [the case study](examples/case-study-two-methods.md). Full references at the end.
 
 ---
 
@@ -920,6 +920,12 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 **Finishing (§7, §8).** The gates were green (full suite, linters, types), and the human read the diff, not the agent's summary. This account does not say whether the feature was also run on its real path. [Live verification is the definition of done](#live-verification-is-the-definition-of-done) requires that before "done". State files and the one rolling plan were updated in the same arc, and the work merged on green.
 
 The session is the manual's practices in sequence.
+
+---
+
+## Case Study: Two Ways to Build the Same Product
+
+One product was built two different ways in two consecutive releases, under the same owner and the same quality bar. Both worked. What stayed fixed, what changed between the two, and what generalizes are in [examples/case-study-two-methods.md](examples/case-study-two-methods.md).
 
 ---
 

@@ -6,7 +6,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 
 ## Files
 
-- `FIELD-MANUAL.md` - the practices, their evidence, the worked example, the case study, and the source list. Slow-changing.
+- `FIELD-MANUAL.md` - the practices, their evidence, the worked example, and the source list. Slow-changing.
 - `METHOD.md` - the ordered method for the human owner. States steps; links to the manual for the why.
 - `AGENT-CONTRACT.md` - the portable operating contract handed to an agent on a product. Not this file.
 - `PRODUCT-DIRECTOR-MODE.md` - the product-shaping contract.
@@ -15,7 +15,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 - `PRACTICE-LIFECYCLE.md` - how techniques enter and leave guidance.
 - `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names.
 - `INCIDENTS.md` - the incident ledger. One entry per real event, with the practices it supports.
-- `templates/` - fill-in artifacts. `examples/` - a worked slice.
+- `templates/` - fill-in artifacts. `examples/` - a worked slice, and the case study of one product built two ways.
 - `README.md`, `LICENSE` (CC BY 4.0), and this file.
 - `CLAUDE.md` - one line that imports this file, so Claude Code loads it even when another `CLAUDE.md` sits above the repository.
 - `scripts/check_manual.py` - checks the repository against its own rules. `scripts/test_check_manual.py` - its unit tests. Python 3, standard library only.

@@ -22,7 +22,7 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 
 | File | Job |
 | --- | --- |
-| [FIELD-MANUAL.md](FIELD-MANUAL.md) | The practices, their evidence, a worked example, and a case study of one product built two ways under one quality bar. Slow-changing. |
+| [FIELD-MANUAL.md](FIELD-MANUAL.md) | The practices, their evidence, and a worked example. Slow-changing. |
 | [METHOD.md](METHOD.md) | The method in order: goal, roles, rules, how much process, orient, decide, critique, contract, architecture, plan, build, review, red-team, prove, simplify, UX, release, improve, cost, failure modes, definition of done. |
 | [AGENT-CONTRACT.md](AGENT-CONTRACT.md) | The portable operating contract for an agent. |
 | [PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md) | The contract for shaping a product with an agent before specification. |
@@ -32,7 +32,7 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 | [CAPABILITY-STACK.md](CAPABILITY-STACK.md) | The capabilities a serious build tends to need, an adoption ladder, and trust boundaries. |
 | [templates/](templates) | Product direction, rule ledger, product brief, specification, architecture decision, current plan, work packet, review record, claims proof matrix, practice card, direction close, handoff. |
 | [INCIDENTS.md](INCIDENTS.md) | The incident ledger: real events behind the practices, each with its month and the rule it produced. |
-| [examples/](examples) | A first product slice end to end. |
+| [examples/](examples) | A first product slice end to end, and a case study of one product built two ways under one quality bar. |
 | [AGENTS.md](AGENTS.md) | The maintainer contract for editing this repository. |
 
 ## The two rules everything else serves

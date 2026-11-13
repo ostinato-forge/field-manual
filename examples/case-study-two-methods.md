@@ -1,10 +1,10 @@
-## Case Study: Two Ways to Build the Same Product
+# Case Study: Two Ways to Build the Same Product
 
-*From the build record of usabl, an accessibility proof engine. The product is public and the build record is private; its source documents are named at the end of this section. Where the lesson is specific to that product it is labeled as such.*
+*From the build record of usabl, an accessibility proof engine. The product is public and the build record is private; its source documents are named at the end of this file. Where the lesson is specific to that product it is labeled as such. The practices it draws on are in [FIELD-MANUAL.md](../FIELD-MANUAL.md).*
 
 There is no one way to build with agents. The same product, under the same owner and the same quality bar, was built two different ways in two consecutive releases. Both worked. The parts that stayed fixed are the parts worth copying.
 
-### What never flexed
+## What never flexed
 
 The team wrote down the invariants before the first line of code and pasted them into every dispatch:
 
@@ -17,7 +17,7 @@ The team wrote down the invariants before the first line of code and pasted them
 
 The product-specific invariants (verdicts, receipts) are the shape of a proof engine. The last three apply anywhere.
 
-### Method one: phased build, four roles, three vendors
+## Method one: phased build, four roles, three vendors
 
 The first release followed a plan set written before any code: thesis and positioning, one consolidated design document, a dated decisions file that closed the design's open forks, then numbered implementation plans. Only then did building start.
 
@@ -30,7 +30,7 @@ Work shipped in what the project called coherence slices: one pull request per i
 - A code comment that cites a plan section rots. A comment that states the invariant does not.
 - A merge gate that CI cannot enforce (a free-tier repository could not require the check) is recorded as a known gap and shown to the owner, never papered over.
 
-### Method two: builder-reviewer loop, one environment, one vendor
+## Method two: builder-reviewer loop, one environment, one vendor
 
 The second release was a finish to team-pickup readiness, and it was built differently. Everything ran in one environment under one orchestrating session. For each slice, a builder agent built test first, a reviewer agent reviewed, and the loop repeated until the reviewer was satisfied. Then a separate security lane reviewed the slice, at slice granularity rather than per PR, so a four-slice feature that shipped as one PR got four security reviews. Pull requests on ordinary paths were pre-authorized and reviewed as they opened; changes to guarded paths and the release tag required explicit human approval.
 
@@ -42,13 +42,13 @@ Independence came from separate dispatches and adversarial framing rather than f
 - The release-critical merge needed two-person control and the sole code owner was also the author. The tool refused. The situation was surfaced for a human decision, the branch ruleset was snapshotted, bypassed once, restored, and confirmed byte-identical, and the commit body records the override. The security model proving itself on the release path is a result, not a defect.
 - Clean-clone onboarding was run by a background agent from fresh clones and took 109 seconds. Four of eight commands exited non-zero, each an honest refusal. The result was labeled agent-run, not human-confirmed.
 
-### Keeping the bar as sessions get long
+## Keeping the bar as sessions get long
 
 Both methods shared one document whose only job was to stop quality from sliding as context filled. Its premise: subagents start empty, so a forgotten paste is the default failure, not a surprise. Every builder and reviewer dispatch had to carry the scoring criteria, the roles one-liner, the honesty list, and pointers to the few files that mattered, never the whole plan set. A dispatch missing any of the first three was not a legal dispatch and was rewritten.
 
 The document also named the decline signals: skipping a reviewer because "it is small", the orchestrator writing product code "just this once", a rubber stamp on a spec-matching shrug, briefs getting shorter while diffs get sloppier, the same Important finding shipped twice. The response to any of them was to name it to the owner, restore the gate, and continue, and never to narrate a recovery that did not happen.
 
-### What generalizes
+## What generalizes
 
 - Fix the invariants and the review structure first. Vendors, model lineups, and process shape can change between releases without the bar moving.
 - Independence between builder and reviewer is structural. Separate context, separate prompt, adversarial framing. Different vendors add diversity but are not what makes the separation work.
@@ -57,4 +57,4 @@ The document also named the decline signals: skipping a reviewer because "it is 
 - Write the quality bar as a document the orchestrator pastes, not a habit it remembers.
 - Keep an append-only build log, dated, that records what became true and what is still not built. Do not rewrite it to look smoother than it was.
 
-Sources for this section: the usabl build logs, quality bars, and role definitions for both releases (`how-we-built-this.md`, `quality-bar.md`, `roles.md`, and the `v0.2.0/` versions of each). They are kept in the project's planning repository, which is private. The product is at [usabl-dev/usabl](https://github.com/usabl-dev/usabl).
+Sources for this case study: the usabl build logs, quality bars, and role definitions for both releases (`how-we-built-this.md`, `quality-bar.md`, `roles.md`, and the `v0.2.0/` versions of each). They are kept in the project's planning repository, which is private. The product is at [usabl-dev/usabl](https://github.com/usabl-dev/usabl).
